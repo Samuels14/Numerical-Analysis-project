@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Numerical Calculator — Bisection, Newton, Gauss...</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' rx='8' fill='%2306b6d4'/><text x='50%' y='54%' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>Σ</text></svg>" alt="logo"/>
+      <div>
+        <h1>Numerical Calculator — Web Interface</h1>
+        <div class="small">Methods for nonlinear equations and linear systems. Use expressions like <code>x^3 - x - 2</code> or mathematical functions supported by <strong>math.js</strong>.</div>
+        <div class="small" style="margin-top:8px; color: #06b6d4;">
+          <strong>Available functions:</strong> sin(x), cos(x), tan(x), log(x) or ln(x) [natural log], log10(x), sqrt(x), exp(x), abs(x), asin(x), acos(x), atan(x), sinh(x), cosh(x), tanh(x), pow(x,n), and more!
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <aside class="card">
+        <label>Function f(x) (for roots) — use <code>x</code> as variable</label>
+        <input id="fx" type="text" placeholder="e.g: sin(x) - x/2, x^3 - x - 2" value="x^3 - x - 2" />
+
+        <div style="margin-top:10px">
+          <label>Choose method</label>
+          <div class="methods-list" id="methods">
+            <button class="method-btn active" data-method="bisection">Bisection</button>
+            <button class="method-btn" data-method="false_position">False Position</button>
+            <button class="method-btn" data-method="incremental_search">Incremental Search</button>
+            <button class="method-btn" data-method="fixed_point">Fixed Point (g(x))</button>
+            <button class="method-btn" data-method="newton">Newton-Raphson</button>
+            <button class="method-btn" data-method="secant">Secant</button>
+            <button class="method-btn" data-method="newton_multiple">Newton (Multiple Roots)</button>
+            <hr style="border:none;margin:8px 0;border-top:1px solid rgba(255,255,255,0.03)"/>
+            <button class="method-btn" data-method="gauss">Gaussian Elimination</button>
+            <button class="method-btn" data-method="partial_pivot">Partial Pivoting</button>
+            <button class="method-btn" data-method="total_pivot">Total Pivoting</button>
+          </div>
+        </div>
+
+        <div class="method-params card" id="params" style="background:transparent;padding:0;margin-top:12px">
+          <!-- dynamic parameters -->
+        </div>
+
+        <button class="run-btn" id="run">Execute</button>
+
+        <div class="help">Tip: if the method requires derivatives (Newton), the program calculates numerical derivatives if no symbolic one is provided.</div>
+      </aside>
+
+      <main class="card">
+        <h3>Output</h3>
+        <div id="result" class="output">Results will appear here...</div>
+        <div id="tablewrap"></div>
+        <footer>
+          <strong>Linear systems:</strong> Enter A by rows (spaces) and b in a separate line. For example, for 2x+3y=5 and x-y=1 write in A: <code>2 3</code> and <code>1 -1</code> and in b: <code>5 1</code>.
+          <br><br>
+          <strong>Function examples:</strong>
+          <br>• <code>sin(x) - x/3</code> (trigonometric)
+          <br>• <code>log(x) - 2</code> or <code>ln(x) - 2</code> (natural logarithm)
+          <br>• <code>ln(sin(x)^2+1)-(1/2)</code> (your example!)
+          <br>• <code>exp(x) - 5</code> (exponential)  
+          <br>• <code>sqrt(x) - 3</code> (square root)
+          <br>• <code>x^2 * cos(x) - 1</code> (combined functions)
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
