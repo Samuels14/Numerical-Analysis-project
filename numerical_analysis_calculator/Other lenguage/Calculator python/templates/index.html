@@ -72,7 +72,7 @@
             </div>
           </div>
 
-          <!-- Parámetros para métodos de intervalos -->
+          <!-- Parameters for interval methods -->
           {% if method in ['bisection', 'false_position'] %}
           <div class="method-params">
             <label>a</label><input name="a" type="number" value="1" step="any">
@@ -84,7 +84,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros para búsqueda incremental -->
+          <!-- Parameters for incremental search -->
           {% if method == 'incremental_search' %}
           <div class="method-params">
             <label>x0</label><input name="x0" type="number" value="0" step="any">
@@ -93,7 +93,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros para secante -->
+          <!-- Parameters for secant method -->
           {% if method == 'secant' %}
           <div class="method-params">
             <label>x0</label><input name="x0" type="number" value="1" step="any">
@@ -105,7 +105,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros para Newton -->
+          <!-- Parameters for Newton method -->
           {% if method in ['newton', 'newton_multiple'] %}
           <div class="method-params">
             <label>x0</label><input name="x0" type="number" value="1.5" step="any">
@@ -123,7 +123,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros para punto fijo -->
+          <!-- Parameters for fixed point method -->
           {% if method == 'fixed_point' %}
           <div class="method-params">
             <label>g(x)</label><input name="g_function" type="text" placeholder="e.g: (x**3 - 2)/x, cos(x)">
@@ -135,7 +135,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros para sistemas lineales -->
+          <!-- Parameters for linear systems -->
           {% if method in ['gauss', 'partial_pivot', 'total_pivot'] %}
           <div class="method-params">
             <label>Size n</label><input name="n" type="number" value="3">
@@ -148,7 +148,7 @@
           </div>
           {% endif %}
 
-          <!-- Parámetros por defecto para bisección si no se especifica método -->
+          <!-- Default parameters for bisection if no method specified -->
           {% if not method or method == 'bisection' %}
           <div class="method-params">
             <label>a</label><input name="a" type="number" value="1" step="any">
