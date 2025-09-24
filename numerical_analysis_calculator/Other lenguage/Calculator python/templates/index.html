@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Numerical Calculator — Bisection, Newton, Gauss...</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' rx='8' fill='%2306b6d4'/><text x='50%' y='54%' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>Σ</text></svg>" alt="logo"/>
+      <div>
+        <h1>Numerical Calculator — Web Interface (Python)</h1>
+        <div class="small">Methods for nonlinear equations and linear systems. Use expressions like <code>x**3 - x - 2</code> or mathematical functions supported by <strong>SymPy</strong>.</div>
+        <div class="small" style="margin-top:8px; color: #06b6d4;">
+          <strong>Available functions:</strong> sin(x), cos(x), tan(x), log(x) or ln(x) [natural log], log(x, 10) [log base 10], sqrt(x), exp(x), abs(x), asin(x), acos(x), atan(x), sinh(x), cosh(x), tanh(x), x**n, and more!
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <aside class="card">
+        <form method="POST" action="/calculate">
+          <label>Function f(x) (for roots) — use <code>x</code> as variable</label>
+          <input name="function" type="text" placeholder="e.g: sin(x) - x/2, x**3 - x - 2" value="x**3 - x - 2" />
+
+          <div style="margin-top:10px">
+            <label>Choose method</label>
+            <div class="methods-list">
+              <label class="method-radio">
+                <input type="radio" name="method" value="bisection" {% if method == 'bisection' or not method %}checked{% endif %}>
+                <span>Bisection</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="false_position" {% if method == 'false_position' %}checked{% endif %}>
+                <span>False Position</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="incremental_search" {% if method == 'incremental_search' %}checked{% endif %}>
+                <span>Incremental Search</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="fixed_point" {% if method == 'fixed_point' %}checked{% endif %}>
+                <span>Fixed Point (g(x))</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="newton" {% if method == 'newton' %}checked{% endif %}>
+                <span>Newton-Raphson</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="secant" {% if method == 'secant' %}checked{% endif %}>
+                <span>Secant</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="newton_multiple" {% if method == 'newton_multiple' %}checked{% endif %}>
+                <span>Newton (Multiple Roots)</span>
+              </label>
+              <hr style="border:none;margin:8px 0;border-top:1px solid rgba(255,255,255,0.03)"/>
+              <label class="method-radio">
+                <input type="radio" name="method" value="gauss" {% if method == 'gauss' %}checked{% endif %}>
+                <span>Gaussian Elimination</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="partial_pivot" {% if method == 'partial_pivot' %}checked{% endif %}>
+                <span>Partial Pivoting</span>
+              </label>
+              <label class="method-radio">
+                <input type="radio" name="method" value="total_pivot" {% if method == 'total_pivot' %}checked{% endif %}>
+                <span>Total Pivoting</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Parámetros para métodos de intervalos -->
+          {% if method in ['bisection', 'false_position'] %}
+          <div class="method-params">
+            <label>a</label><input name="a" type="number" value="1" step="any">
+            <label>b</label><input name="b" type="number" value="2" step="any">
+            <div class="two-col">
+              <div><label>tolerance</label><input name="tolerance" type="number" value="1e-6" step="any"></div>
+              <div><label>Nmax</label><input name="nmax" type="number" value="50"></div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Parámetros para búsqueda incremental -->
+          {% if method == 'incremental_search' %}
+          <div class="method-params">
+            <label>x0</label><input name="x0" type="number" value="0" step="any">
+            <label>delta</label><input name="delta" type="number" value="0.5" step="any">
+            <label>Nmax</label><input name="nmax" type="number" value="50">
+          </div>
+          {% endif %}
+
+          <!-- Parámetros para secante -->
+          {% if method == 'secant' %}
+          <div class="method-params">
+            <label>x0</label><input name="x0" type="number" value="1" step="any">
+            <label>x1</label><input name="x1" type="number" value="2" step="any">
+            <div class="two-col">
+              <div><label>tolerance</label><input name="tolerance" type="number" value="1e-6" step="any"></div>
+              <div><label>Nmax</label><input name="nmax" type="number" value="50"></div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Parámetros para Newton -->
+          {% if method in ['newton', 'newton_multiple'] %}
+          <div class="method-params">
+            <label>x0</label><input name="x0" type="number" value="1.5" step="any">
+            <div class="two-col">
+              <div><label>tolerance</label><input name="tolerance" type="number" value="1e-6" step="any"></div>
+              <div><label>Nmax</label><input name="nmax" type="number" value="50"></div>
+            </div>
+            <label class="small">If you want, you can enter f'(x) or f''(x) symbolically using SymPy syntax; otherwise numerical derivatives are used.</label>
+            <label>Symbolic derivative (optional)</label>
+            <input name="derivative" type="text" placeholder="e.g: 3*x**2 - 1, cos(x) - 1/2">
+            {% if method == 'newton_multiple' %}
+            <label>Second derivative (only for multiple roots)</label>
+            <input name="second_derivative" type="text" placeholder="e.g: 6*x">
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <!-- Parámetros para punto fijo -->
+          {% if method == 'fixed_point' %}
+          <div class="method-params">
+            <label>g(x)</label><input name="g_function" type="text" placeholder="e.g: (x**3 - 2)/x, cos(x)">
+            <label>x0</label><input name="x0" type="number" value="1" step="any">
+            <div class="two-col">
+              <div><label>tolerance</label><input name="tolerance" type="number" value="1e-6" step="any"></div>
+              <div><label>Nmax</label><input name="nmax" type="number" value="50"></div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Parámetros para sistemas lineales -->
+          {% if method in ['gauss', 'partial_pivot', 'total_pivot'] %}
+          <div class="method-params">
+            <label>Size n</label><input name="n" type="number" value="3">
+            <label>A (each row in a line, separate coefficients with spaces)</label>
+            <textarea name="matrix_A" placeholder="e.g: 2 3 1&#10;1 -1 2&#10;3 0 -1">2 3 -1
+1 -2 3
+0 1 1</textarea>
+            <label>b (values separated by spaces)</label>
+            <input name="vector_b" type="text" value="1 -4 2">
+          </div>
+          {% endif %}
+
+          <!-- Parámetros por defecto para bisección si no se especifica método -->
+          {% if not method or method == 'bisection' %}
+          <div class="method-params">
+            <label>a</label><input name="a" type="number" value="1" step="any">
+            <label>b</label><input name="b" type="number" value="2" step="any">
+            <div class="two-col">
+              <div><label>tolerance</label><input name="tolerance" type="number" value="1e-6" step="any"></div>
+              <div><label>Nmax</label><input name="nmax" type="number" value="50"></div>
+            </div>
+          </div>
+          {% endif %}
+
+          <button type="submit" class="run-btn">Execute</button>
+        </form>
+
+        <div class="help">Tip: if the method requires derivatives (Newton), the program calculates numerical derivatives if no symbolic one is provided.</div>
+      </aside>
+
+      <main class="card">
+        <h3>Output</h3>
+        <div class="output">
+          {% if error %}
+            <div style="color: #ef4444;">Error: {{ error }}</div>
+          {% elif result %}
+            {{ result }}
+          {% else %}
+            Results will appear here...
+          {% endif %}
+        </div>
+
+        {% if iterations and headers %}
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in iterations %}
+              <tr>
+                {% for cell in row %}
+                <td>
+                  {% if cell is number %}
+                    {{ "%.8g"|format(cell) }}
+                  {% else %}
+                    {{ cell if cell is not none else '' }}
+                  {% endif %}
+                </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        <footer>
+          <strong>Linear systems:</strong> Enter A by rows (spaces) and b in a separate line. For example, for 2x+3y=5 and x-y=1 write in A: <code>2 3</code> and <code>1 -1</code> and in b: <code>5 1</code>.
+          <br><br>
+          <strong>Function examples:</strong>
+          <br>• <code>sin(x) - x/3</code> (trigonometric)
+          <br>• <code>log(x) - 2</code> or <code>ln(x) - 2</code> (natural logarithm)
+          <br>• <code>ln(sin(x)**2+1)-(1/2)</code> (your example!)
+          <br>• <code>exp(x) - 5</code> (exponential)
+          <br>• <code>sqrt(x) - 3</code> (square root)
+          <br>• <code>x**2 * cos(x) - 1</code> (combined functions)
+        </footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
