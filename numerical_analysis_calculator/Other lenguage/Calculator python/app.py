@@ -7,7 +7,7 @@ import math
 app = Flask(__name__)
 
 def create_function(expr):
-    """Crea una función evaluable a partir de una expresión string"""
+    """Creates an evaluable function from a string expression"""
     x = symbols('x')
     expr = expr.replace('ln(', 'log(')
     expr = expr.replace('Log(', 'log(')
@@ -15,17 +15,17 @@ def create_function(expr):
     return lambdify(x, parsed, 'numpy')
 
 def numeric_derivative(f, x, h=1e-6):
-    """Derivada numérica usando diferencias centradas"""
+    """Numerical derivative using centered differences"""
     return (f(x + h) - f(x - h)) / (2 * h)
 
 def numeric_second_derivative(f, x, h=1e-5):
-    """Segunda derivada numérica"""
+    """Numerical second derivative"""
     return (f(x + h) - 2*f(x) + f(x - h)) / (h**2)
 
-# MÉTODOS NUMÉRICOS
+# NUMERICAL METHODS
 
 def incremental_search(f, x0, delta, nmax):
-    """Búsqueda incremental"""
+    """Incremental search"""
     iterations = []
     fx0 = f(x0)
 
@@ -42,7 +42,7 @@ def incremental_search(f, x0, delta, nmax):
     return {"interval": None, "iterations": iterations}
 
 def bisection_method(f, a, b, tol, nmax):
-    """Método de bisección"""
+    """Bisection method"""
     iterations = []
 
     for i in range(nmax):
@@ -61,7 +61,7 @@ def bisection_method(f, a, b, tol, nmax):
     return {"root": (a + b) / 2, "iterations": iterations}
 
 def false_position_method(f, a, b, tol, nmax):
-    """Método de falsa posición"""
+    """False position method"""
     iterations = []
 
     for i in range(nmax):
@@ -81,7 +81,7 @@ def false_position_method(f, a, b, tol, nmax):
     return {"root": c, "iterations": iterations}
 
 def fixed_point_method(g, x0, tol, nmax):
-    """Método de punto fijo"""
+    """Fixed point method"""
     iterations = []
 
     for i in range(nmax):
@@ -96,7 +96,7 @@ def fixed_point_method(g, x0, tol, nmax):
     return {"root": x0, "iterations": iterations}
 
 def newton_method(f, df, x0, tol, nmax):
-    """Método de Newton-Raphson"""
+    """Newton-Raphson method"""
     iterations = []
 
     for i in range(nmax):
@@ -117,7 +117,7 @@ def newton_method(f, df, x0, tol, nmax):
     return {"root": x0, "iterations": iterations}
 
 def secant_method(f, x0, x1, tol, nmax):
-    """Método de la secante"""
+    """Secant method"""
     iterations = []
 
     for i in range(nmax):
@@ -137,7 +137,7 @@ def secant_method(f, x0, x1, tol, nmax):
     return {"root": x1, "iterations": iterations}
 
 def newton_multiple_roots(f, df, d2f, x0, tol, nmax):
-    """Método de Newton para raíces múltiples"""
+    """Newton method for multiple roots"""
     iterations = []
 
     for i in range(nmax):
@@ -160,24 +160,24 @@ def newton_multiple_roots(f, df, d2f, x0, tol, nmax):
     return {"root": x0, "iterations": iterations}
 
 def parse_matrix(matrix_text):
-    """Parsea una matriz desde texto"""
+    """Parses a matrix from text"""
     rows = [row.strip() for row in matrix_text.strip().split('\n') if row.strip()]
     return [[float(x) for x in row.split()] for row in rows]
 
 def gauss_elimination(A, b):
-    """Eliminación Gaussiana"""
+    """Gaussian elimination"""
     n = len(A)
-    # Crear matriz aumentada
+    # Create augmented matrix
     M = [row[:] + [b[i]] for i, row in enumerate(A)]
 
-    # Eliminación hacia adelante
+    # Forward elimination
     for k in range(n - 1):
         for i in range(k + 1, n):
             factor = M[i][k] / M[k][k]
             for j in range(k, n + 1):
                 M[i][j] -= factor * M[k][j]
 
-    # Sustitución hacia atrás
+    # Backward substitution
     x = [0] * n
     for i in range(n - 1, -1, -1):
         s = M[i][n]
@@ -188,28 +188,28 @@ def gauss_elimination(A, b):
     return x
 
 def partial_pivoting(A, b):
-    """Eliminación Gaussiana con pivoteo parcial"""
+    """Gaussian elimination with partial pivoting"""
     n = len(A)
     M = [row[:] + [b[i]] for i, row in enumerate(A)]
 
     for k in range(n - 1):
-        # Encontrar fila con el mayor elemento en columna k
+        # Find row with largest element in column k
         max_row = k
         for i in range(k + 1, n):
             if abs(M[i][k]) > abs(M[max_row][k]):
                 max_row = i
 
-        # Intercambiar filas
+        # Swap rows
         if max_row != k:
             M[k], M[max_row] = M[max_row], M[k]
 
-        # Eliminación
+        # Elimination
         for i in range(k + 1, n):
             factor = M[i][k] / M[k][k]
             for j in range(k, n + 1):
                 M[i][j] -= factor * M[k][j]
 
-    # Sustitución hacia atrás
+    # Backward substitution
     x = [0] * n
     for i in range(n - 1, -1, -1):
         s = M[i][n]
@@ -220,13 +220,13 @@ def partial_pivoting(A, b):
     return x
 
 def total_pivoting(A, b):
-    """Eliminación Gaussiana con pivoteo total"""
+    """Gaussian elimination with total pivoting"""
     n = len(A)
     M = [row[:] + [b[i]] for i, row in enumerate(A)]
     marks = list(range(n))
 
     for k in range(n - 1):
-        # Encontrar el elemento máximo en la submatriz
+        # Find maximum element in submatrix
         max_val, max_row, max_col = 0, k, k
         for i in range(k, n):
             for j in range(k, n):
@@ -236,23 +236,23 @@ def total_pivoting(A, b):
         if max_val == 0:
             continue
 
-        # Intercambiar filas
+        # Swap rows
         if max_row != k:
             M[k], M[max_row] = M[max_row], M[k]
 
-        # Intercambiar columnas
+        # Swap columns
         if max_col != k:
             for i in range(n):
                 M[i][k], M[i][max_col] = M[i][max_col], M[i][k]
             marks[k], marks[max_col] = marks[max_col], marks[k]
 
-        # Eliminación
+        # Elimination
         for i in range(k + 1, n):
             factor = M[i][k] / M[k][k]
             for j in range(k, n + 1):
                 M[i][j] -= factor * M[k][j]
 
-    # Sustitución hacia atrás
+    # Backward substitution
     x = [0] * n
     for i in range(n - 1, -1, -1):
         s = M[i][n]
@@ -260,7 +260,7 @@ def total_pivoting(A, b):
             s -= M[i][j] * x[j]
         x[i] = s / M[i][i]
 
-    # Reordenar solución
+    # Reorder solution
     x_final = [0] * n
     for i in range(n):
         x_final[marks[i]] = x[i]
@@ -285,7 +285,7 @@ def calculate():
         headers = []
 
         if method in ['bisection', 'false_position', 'incremental_search', 'fixed_point', 'newton', 'secant', 'newton_multiple']:
-            # Métodos para encontrar raíces
+            # Methods for finding roots
             expr = request.form['function']
             f = create_function(expr)
 
@@ -295,7 +295,7 @@ def calculate():
                 nmax = int(request.form['nmax'])
                 res = incremental_search(f, x0, delta, nmax)
 
-                result = f"Intervalo con cambio de signo: {res['interval']}" if res['interval'] else "No se encontró intervalo en Nmax iteraciones"
+                result = f"Interval with sign change: {res['interval']}" if res['interval'] else "No interval found in Nmax iterations"
                 iterations = res['iterations']
                 headers = ['i', 'x0', 'f(x0)', 'x1', 'f(x1)']
 
@@ -304,7 +304,7 @@ def calculate():
                 tol, nmax = float(request.form['tolerance']), int(request.form['nmax'])
                 res = bisection_method(f, a, b, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'a', 'b', 'c', 'f(c)']
 
@@ -313,7 +313,7 @@ def calculate():
                 tol, nmax = float(request.form['tolerance']), int(request.form['nmax'])
                 res = false_position_method(f, a, b, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'a', 'b', 'c', 'f(c)']
 
@@ -323,7 +323,7 @@ def calculate():
                 x0, tol, nmax = float(request.form['x0']), float(request.form['tolerance']), int(request.form['nmax'])
                 res = fixed_point_method(g, x0, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'x_old', 'x_new']
 
@@ -332,7 +332,7 @@ def calculate():
                 x0, tol, nmax = float(request.form['x0']), float(request.form['tolerance']), int(request.form['nmax'])
                 res = newton_method(f, df, x0, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'x', 'f(x)', "f'(x)", 'x_next']
 
@@ -341,7 +341,7 @@ def calculate():
                 tol, nmax = float(request.form['tolerance']), int(request.form['nmax'])
                 res = secant_method(f, x0, x1, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'x0', 'x1', 'x2', 'f(x1)']
 
@@ -351,12 +351,12 @@ def calculate():
                 x0, tol, nmax = float(request.form['x0']), float(request.form['tolerance']), int(request.form['nmax'])
                 res = newton_multiple_roots(f, df, d2f, x0, tol, nmax)
 
-                result = f"Raíz aproximada: {res['root']}"
+                result = f"Approximate root: {res['root']}"
                 iterations = res['iterations']
                 headers = ['i', 'x', 'f(x)', "f'", "f''", 'x_next']
 
         elif method in ['gauss', 'partial_pivot', 'total_pivot']:
-            # Métodos para sistemas lineales
+            # Methods for linear systems
             A = parse_matrix(request.form['matrix_A'])
             b = [float(x) for x in request.form['vector_b'].split()]
 
@@ -367,7 +367,7 @@ def calculate():
             elif method == 'total_pivot':
                 solution = total_pivoting(A, b)
 
-            result = f"Solución: {', '.join([f'{x:.8g}' for x in solution])}"
+            result = f"Solution: {', '.join([f'{x:.8g}' for x in solution])}"
 
         return render_template('index.html',
                              result=result,
