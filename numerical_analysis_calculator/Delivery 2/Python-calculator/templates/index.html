@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Numerical Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Desmos API -->
+  <script src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' rx='8' fill='%2306b6d4'/><text x='50%' y='54%' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>Σ</text></svg>" alt="logo"/>
+      <div>
+        <h1>Numerical Calculator</h1>
+        <div class="small">Methods for nonlinear equations and linear systems. Use expressions like <code>x**3 - x - 2</code> or mathematical functions supported by <strong>SymPy</strong>.</div>
+        <div class="small" style="margin-top:8px; color: #06b6d4;">
+          <strong>Available functions:</strong> sin(x), cos(x), tan(x), log(x) or ln(x) [natural log], log(x, 10) [log base 10], sqrt(x), exp(x), abs(x), asin(x), acos(x), atan(x), sinh(x), cosh(x), tanh(x), x**n, and more!
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <form method="POST" action="/calculate" novalidate>
+
+          <!-- Tabs Navigation -->
+          <div class="tabs-container">
+            <button type="button" class="tab-button active" onclick="switchTab(event, 'equations')">
+              <span class="emoji">🔍</span>
+              <span>Equation Solving</span>
+            </button>
+            <button type="button" class="tab-button" onclick="switchTab(event, 'linear')">
+              <span class="emoji">📐</span>
+              <span>Linear Systems</span>
+            </button>
+            <button type="button" class="tab-button" onclick="switchTab(event, 'interpolation')">
+              <span class="emoji">📈</span>
+              <span>Interpolation</span>
+            </button>
+            <button type="button" class="tab-button" onclick="switchTab(event, 'additional')">
+              <span class="emoji">➕</span>
+              <span>Additional Methods</span>
+            </button>
+          </div>
+
+          <!-- Tab Content: Equation Solving -->
+          <div id="equations" class="tab-content active">
+            <div class="subsection-title">
+              <span class="emoji">📌</span>
+              <span>Interval Methods</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="incremental_search" {% if method == 'incremental_search' %}checked{% endif %}>
+                <span>Incremental Search</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="bisection" {% if method == 'bisection' or not method %}checked{% endif %}>
+                <span>Bisection</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="false_position" {% if method == 'false_position' %}checked{% endif %}>
+                <span>False Position</span>
+              </label>
+            </div>
+
+            <div class="subsection-title">
+              <span class="emoji">📌</span>
+              <span>Open Methods</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="fixed_point" {% if method == 'fixed_point' %}checked{% endif %}>
+                <span>Fixed Point</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="newton" {% if method == 'newton' %}checked{% endif %}>
+                <span>Newton-Raphson</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="secant" {% if method == 'secant' %}checked{% endif %}>
+                <span>Secant</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="newton_multiple" {% if method == 'newton_multiple' %}checked{% endif %}>
+                <span>Newton Multiple Roots</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tab Content: Linear Systems -->
+          <div id="linear" class="tab-content">
+            <div class="subsection-title">
+              <span class="emoji">🔸</span>
+              <span>Gaussian Elimination</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="gauss" {% if method == 'gauss' %}checked{% endif %}>
+                <span>Simple Gaussian</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="partial_pivot" {% if method == 'partial_pivot' %}checked{% endif %}>
+                <span>Partial Pivoting</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="total_pivot" {% if method == 'total_pivot' %}checked{% endif %}>
+                <span>Total Pivoting</span>
+              </label>
+            </div>
+
+            <div class="subsection-title">
+              <span class="emoji">🔸</span>
+              <span>Factorization</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="lu_simple" {% if method == 'lu_simple' %}checked{% endif %}>
+                <span>LU Simple</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="lu_partial" {% if method == 'lu_partial' %}checked{% endif %}>
+                <span>LU Partial Pivoting</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="crout" {% if method == 'crout' %}checked{% endif %}>
+                <span>Crout</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="doolittle" {% if method == 'doolittle' %}checked{% endif %}>
+                <span>Doolittle</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="cholesky" {% if method == 'cholesky' %}checked{% endif %}>
+                <span>Cholesky</span>
+              </label>
+            </div>
+
+            <div class="subsection-title">
+              <span class="emoji">📌</span>
+              <span>Iterative Methods</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="jacobi" {% if method == 'jacobi' %}checked{% endif %}>
+                <span>Jacobi</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="gauss_seidel" {% if method == 'gauss_seidel' %}checked{% endif %}>
+                <span>Gauss-Seidel</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="sor" {% if method == 'sor' %}checked{% endif %}>
+                <span>SOR</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tab Content: Interpolation -->
+          <div id="interpolation" class="tab-content">
+            <div class="subsection-title">
+              <span class="emoji">📌</span>
+              <span>Polynomial Interpolation</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="vandermonde" {% if method == 'vandermonde' %}checked{% endif %}>
+                <span>Vandermonde</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="divided_differences" {% if method == 'divided_differences' %}checked{% endif %}>
+                <span>Divided Differences</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="lagrange" {% if method == 'lagrange' %}checked{% endif %}>
+                <span>Lagrange</span>
+              </label>
+            </div>
+
+            <div class="subsection-title">
+              <span class="emoji">📊</span>
+              <span>Splines</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="linear_spline" {% if method == 'linear_spline' %}checked{% endif %}>
+                <span>Linear Spline</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="quadratic_spline" {% if method == 'quadratic_spline' %}checked{% endif %}>
+                <span>Quadratic Spline</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="cubic_spline" {% if method == 'cubic_spline' %}checked{% endif %}>
+                <span>Cubic Spline</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tab Content: Additional Methods -->
+          <div id="additional" class="tab-content">
+            <div class="subsection-title">
+              <span class="emoji">🔧</span>
+              <span>Substitution Methods</span>
+            </div>
+            <div class="methods-grid">
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="forward_substitution" {% if method == 'forward_substitution' %}checked{% endif %}>
+                <span>Forward Substitution</span>
+              </label>
+              <label class="method-card" onclick="selectMethod(this)">
+                <input type="radio" name="method" value="backward_substitution" {% if method == 'backward_substitution' %}checked{% endif %}>
+                <span>Backward Substitution</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Dynamic Parameters Section -->
+          <div style="margin-top:16px">
+            <h4 style="margin:0 0 12px 0; color:var(--text); font-size:14px;">Parameters</h4>
+            <div id="dynamic-params"></div>
+          </div>
+
+
+          <button type="submit" class="run-btn">Calculate</button>
+        </form>
+      </div>
+
+      <div class="card">
+  <!-- Desmos Graph Container -->
+  <!-- Mostrar por defecto para facilitar diagnóstico de la API Desmos -->
+  <div id="graph-section" style="margin-bottom: 20px; display: block;">
+          <h3>Graph</h3>
+          <div id="calculator" style="width: 100%; height: 400px; border: 1px solid #e5e7eb; border-radius: 8px;"></div>
+        </div>
+
+        <h3>Output</h3>
+        <div class="output">
+          {% if error %}
+            <div style="color: #ef4444;">Error: {{ error }}</div>
+          {% elif result %}
+            {{ result }}
+          {% else %}
+            Results will appear here...
+          {% endif %}
+        </div>
+
+        {% if iterations and headers %}
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in iterations %}
+              <tr>
+                {% for cell in row %}
+                <td>
+                  {% if cell is number %}
+                    {{ "%.8g"|format(cell) }}
+                  {% else %}
+                    {{ cell if cell is not none else '' }}
+                  {% endif %}
+                </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        <footer>
+          <strong>Linear systems:</strong> Enter A by rows (spaces) and b in a separate line. For example, for 2x+3y=5 and x-y=1 write in A: <code>2 3</code> and <code>1 -1</code> and in b: <code>5 1</code>.
+          <br><br>
+          <strong>Function examples:</strong>
+          <br>• <code>sin(x) - x/3</code> (trigonometric)
+          <br>• <code>log(x) - 2</code> or <code>ln(x) - 2</code> (natural logarithm)
+          <br>• <code>ln(sin(x)**2+1)-(1/2)</code> (your example!)
+          <br>• <code>exp(x) - 5</code> (exponential)
+          <br>• <code>sqrt(x) - 3</code> (square root)
+          <br>• <code>x**2 * cos(x) - 1</code> (combined functions)
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Form data from backend (persisted after calculation)
+    const savedFormData = {{ form_data | tojson | safe }};
+    console.log('Saved form data:', savedFormData);
+
+    // Define parameters for each method
+    const methodParams = {
+      // Equation Solving - Interval Methods
+      'incremental_search': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2', required: true},
+        {name: 'x0', label: 'Initial x₀', type: 'number', value: '0', step: 'any', required: true},
+        {name: 'delta', label: 'Delta (Δ)', type: 'number', value: '0.5', step: 'any', required: true},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50', required: true}
+      ],
+      'bisection': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2', required: true},
+        {name: 'a', label: 'Interval start (a)', type: 'number', value: '1', step: 'any', required: true},
+        {name: 'b', label: 'Interval end (b)', type: 'number', value: '2', step: 'any', required: true},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any', required: true},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50', required: true}
+      ],
+      'false_position': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2', required: true},
+        {name: 'a', label: 'Interval start (a)', type: 'number', value: '1', step: 'any', required: true},
+        {name: 'b', label: 'Interval end (b)', type: 'number', value: '2', step: 'any', required: true},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any', required: true},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50', required: true}
+      ],
+
+      // Open Methods
+      'fixed_point': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2'},
+        {name: 'g_function', label: 'g(x) function', type: 'text', placeholder: 'e.g: (x**3 - 2)/x'},
+        {name: 'x0', label: 'Initial x₀', type: 'number', value: '1', step: 'any'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'}
+      ],
+      'newton': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2'},
+        {name: 'x0', label: 'Initial x₀', type: 'number', value: '1.5', step: 'any'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'},
+        {name: 'derivative', label: 'Derivative f\'(x) (optional)', type: 'text', placeholder: 'e.g: 3*x**2 - 1', required: false}
+      ],
+      'secant': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2'},
+        {name: 'x0', label: 'First point x₀', type: 'number', value: '1', step: 'any'},
+        {name: 'x1', label: 'Second point x₁', type: 'number', value: '2', step: 'any'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'}
+      ],
+      'newton_multiple': [
+        {name: 'function', label: 'Function f(x)', type: 'text', placeholder: 'e.g: x**3 - x - 2', value: 'x**3 - x - 2'},
+        {name: 'x0', label: 'Initial x₀', type: 'number', value: '1.5', step: 'any'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'},
+        {name: 'derivative', label: 'First derivative f\'(x) (optional)', type: 'text', placeholder: 'e.g: 3*x**2 - 1', required: false},
+        {name: 'second_derivative', label: 'Second derivative f\'\'(x) (optional)', type: 'text', placeholder: 'e.g: 6*x', required: false}
+      ],
+
+      // Linear Systems - Direct Methods
+      'gauss': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'partial_pivot': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'total_pivot': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'lu_simple': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'lu_partial': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'crout': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'doolittle': [
+        {name: 'matrix_A', label: 'Matrix A (each row in a line)', type: 'textarea', placeholder: '2 3 -1\n1 -2 3\n0 1 1', value: '2 3 -1\n1 -2 3\n0 1 1'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+      'cholesky': [
+        {name: 'matrix_A', label: 'Matrix A (symmetric positive definite)', type: 'textarea', placeholder: '4 2 1\n2 5 3\n1 3 6', value: '4 2 1\n2 5 3\n1 3 6'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '1 -4 2'}
+      ],
+
+      // Linear Systems - Iterative Methods
+      'jacobi': [
+        {name: 'matrix_A', label: 'Matrix A (diagonally dominant)', type: 'textarea', placeholder: '4 -1 0\n-1 4 -1\n0 -1 4', value: '4 -1 0\n-1 4 -1\n0 -1 4'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '15 10 10'},
+        {name: 'x0_vector', label: 'Initial approximation x₀ (space-separated)', type: 'text', value: '0 0 0'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'}
+      ],
+      'gauss_seidel': [
+        {name: 'matrix_A', label: 'Matrix A (diagonally dominant)', type: 'textarea', placeholder: '4 -1 0\n-1 4 -1\n0 -1 4', value: '4 -1 0\n-1 4 -1\n0 -1 4'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '15 10 10'},
+        {name: 'x0_vector', label: 'Initial approximation x₀ (space-separated)', type: 'text', value: '0 0 0'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'}
+      ],
+      'sor': [
+        {name: 'matrix_A', label: 'Matrix A (diagonally dominant)', type: 'textarea', placeholder: '4 -1 0\n-1 4 -1\n0 -1 4', value: '4 -1 0\n-1 4 -1\n0 -1 4'},
+        {name: 'vector_b', label: 'Vector b (space-separated)', type: 'text', value: '15 10 10'},
+        {name: 'x0_vector', label: 'Initial approximation x₀ (space-separated)', type: 'text', value: '0 0 0'},
+        {name: 'omega', label: 'Relaxation factor ω (0 < ω < 2)', type: 'number', value: '1.5', step: '0.1', min: '0.01', max: '1.99'},
+        {name: 'tolerance', label: 'Tolerance', type: 'number', value: '1e-6', step: 'any'},
+        {name: 'nmax', label: 'Max iterations (Nmax)', type: 'number', value: '50'}
+      ],
+
+      // Interpolation
+      'vandermonde': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+      'divided_differences': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+      'lagrange': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+      'linear_spline': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+      'quadratic_spline': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+      'cubic_spline': [
+        {name: 'x_values', label: 'X values (space-separated)', type: 'text', value: '0 1 2 3', placeholder: 'e.g: 0 1 2 3'},
+        {name: 'y_values', label: 'Y values (space-separated)', type: 'text', value: '1 2 0 4', placeholder: 'e.g: 1 2 0 4'}
+      ],
+
+      // Additional Methods
+      'forward_substitution': [
+        {name: 'augmented_matrix', label: 'Augmented matrix [L|b] (lower triangular, each row in a line)', type: 'textarea', placeholder: '2 0 0 4\n3 5 0 19\n1 2 4 24', value: '2 0 0 4\n3 5 0 19\n1 2 4 24'}
+      ],
+      'backward_substitution': [
+        {name: 'augmented_matrix', label: 'Augmented matrix [U|b] (upper triangular, each row in a line)', type: 'textarea', placeholder: '4 2 1 11\n0 5 3 19\n0 0 2 6', value: '4 2 1 11\n0 5 3 19\n0 0 2 6'}
+      ]
+    };
+
+    // Function to render parameters dynamically
+    function renderParameters(method) {
+      const container = document.getElementById('dynamic-params');
+      container.innerHTML = '';
+
+      console.log('Rendering parameters for method:', method);
+
+      const params = methodParams[method];
+      if (!params) {
+        console.warn('No parameters defined for method:', method);
+        container.innerHTML = '<p style="color:var(--text-light);">No parameters needed for this method.</p>';
+        return;
+      }
+
+      console.log('Parameters:', params);
+
+      params.forEach(param => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '10px';
+
+        const label = document.createElement('label');
+        label.textContent = param.label;
+        label.style.display = 'block';
+        label.style.marginBottom = '4px';
+        div.appendChild(label);
+
+        let input;
+        if (param.type === 'textarea') {
+          input = document.createElement('textarea');
+          input.rows = 3;
+        } else {
+          input = document.createElement('input');
+          input.type = param.type;
+        }
+
+        input.name = param.name;
+        if (param.placeholder) input.placeholder = param.placeholder;
+
+        // Use saved form data if available, otherwise use default value
+        if (savedFormData && savedFormData[param.name] !== undefined) {
+          input.value = savedFormData[param.name];
+        } else if (param.value !== undefined) {
+          input.value = param.value;
+        }
+
+        if (param.step) input.step = param.step;
+        if (param.min !== undefined) input.min = param.min;
+        if (param.max !== undefined) input.max = param.max;
+
+        div.appendChild(input);
+        container.appendChild(div);
+      });
+
+      console.log('Parameters rendered successfully');
+    }
+
+    // Tab switching function
+    function switchTab(event, tabId) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // Method selection function
+    function selectMethod(element) {
+      document.querySelectorAll('.method-card').forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+
+      const radio = element.querySelector('input[type="radio"]');
+      radio.checked = true;
+
+      // Render parameters for the selected method
+      renderParameters(radio.value);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkedRadio = document.querySelector('input[name="method"]:checked');
+      if (checkedRadio) {
+        const card = checkedRadio.closest('.method-card');
+        if (card) {
+          card.classList.add('selected');
+          const tabContent = checkedRadio.closest('.tab-content');
+          if (tabContent) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            tabContent.classList.add('active');
+            const tabId = tabContent.id;
+            const tabButton = document.querySelector(`[onclick="switchTab(event, '${tabId}')"]`);
+            if (tabButton) tabButton.classList.add('active');
+          }
+        }
+        // Render initial parameters
+        renderParameters(checkedRadio.value);
+      } else {
+        // Default to bisection
+        renderParameters('bisection');
+      }
+
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          console.log('Form submit triggered');
+          console.log('Form validity:', form.checkValidity());
+        });
+      }
+
+      // Initialize Desmos and update graph if there's saved data
+      setTimeout(() => {
+        initDesmos();
+        if (savedFormData && savedFormData.function) {
+          console.log('Updating graph with saved data');
+          updateGraph();
+        }
+      }, 200);
+    });
+
+    // ========== DESMOS INTEGRATION ==========
+    let calculator = null;
+
+    // Initialize Desmos calculator
+    function initDesmos() {
+      const calculatorElement = document.getElementById('calculator');
+      if (calculatorElement && !calculator) {
+        calculator = Desmos.GraphingCalculator(calculatorElement, {
+          keypad: false,
+          expressions: false,
+          settingsMenu: false,
+          zoomButtons: true,
+          expressionsTopbar: false,
+          border: false
+        });
+        console.log('Desmos calculator initialized');
+      }
+    }
+
+    // Convert Python/SymPy syntax to LaTeX for Desmos
+    function pythonToLatex(expr) {
+      if (!expr) return '';
+
+      let latex = expr.toString();
+
+      latex = latex.replace(/\*\*/g, '^');
+      latex = latex.replace(/ln\(/g, '\\ln(');
+      latex = latex.replace(/log\(/g, '\\log(');
+      latex = latex.replace(/sin\(/g, '\\sin(');
+      latex = latex.replace(/cos\(/g, '\\cos(');
+      latex = latex.replace(/tan\(/g, '\\tan(');
+      latex = latex.replace(/asin\(/g, '\\arcsin(');
+      latex = latex.replace(/acos\(/g, '\\arccos(');
+      latex = latex.replace(/atan\(/g, '\\arctan(');
+      latex = latex.replace(/sinh\(/g, '\\sinh(');
+      latex = latex.replace(/cosh\(/g, '\\cosh(');
+      latex = latex.replace(/tanh\(/g, '\\tanh(');
+      latex = latex.replace(/exp\(/g, 'e^{');
+      latex = latex.replace(/sqrt\(/g, '\\sqrt{');
+      latex = latex.replace(/abs\(/g, '\\left|');
+
+      let expCount = (latex.match(/e\^\{/g) || []).length;
+      let sqrtCount = (latex.match(/\\sqrt\{/g) || []).length;
+
+      for (let i = 0; i < expCount; i++) {
+        latex = latex.replace(/\)/, '}');
+      }
+      for (let i = 0; i < sqrtCount; i++) {
+        latex = latex.replace(/\)/, '}');
+      }
+
+      latex = latex.replace(/\|/g, '\\right|');
+      latex = latex.replace(/\*/g, '');
+
+      return latex;
+    }
+
+    // Update graph based on function input
+    function updateGraph() {
+      if (!calculator) return;
+
+      const functionInput = document.querySelector('input[name="function"]');
+      const gFunctionInput = document.querySelector('input[name="g_function"]');
+
+      if (!functionInput) {
+        document.getElementById('graph-section').style.display = 'none';
+        return;
+      }
+
+      const funcValue = functionInput.value.trim();
+
+      if (!funcValue) {
+        document.getElementById('graph-section').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('graph-section').style.display = 'block';
+
+      calculator.setBlank();
+
+      const latexFunc = pythonToLatex(funcValue);
+      calculator.setExpression({
+        id: 'main-function',
+        latex: `y=${latexFunc}`,
+        color: '#2563eb',
+        lineWidth: 2
+      });
+
+      calculator.setExpression({
+        id: 'x-axis',
+        latex: 'y=0',
+        color: '#9ca3af',
+        lineStyle: Desmos.Styles.DASHED,
+        lineWidth: 1
+      });
+
+      if (gFunctionInput && gFunctionInput.value.trim()) {
+        const gLatex = pythonToLatex(gFunctionInput.value.trim());
+        calculator.setExpression({
+          id: 'g-function',
+          latex: `y=${gLatex}`,
+          color: '#16a34a',
+          lineWidth: 2
+        });
+
+        calculator.setExpression({
+          id: 'identity',
+          latex: 'y=x',
+          color: '#dc2626',
+          lineStyle: Desmos.Styles.DASHED,
+          lineWidth: 1
+        });
+      }
+
+      const aInput = document.querySelector('input[name="a"]');
+      const bInput = document.querySelector('input[name="b"]');
+
+      if (aInput && bInput && aInput.value && bInput.value) {
+        const a = parseFloat(aInput.value);
+        const b = parseFloat(bInput.value);
+
+        if (!isNaN(a) && !isNaN(b)) {
+          calculator.setExpression({
+            id: 'interval-a',
+            latex: `x=${a}`,
+            color: '#f59e0b',
+            lineStyle: Desmos.Styles.DASHED,
+            lineWidth: 1
+          });
+
+          calculator.setExpression({
+            id: 'interval-b',
+            latex: `x=${b}`,
+            color: '#f59e0b',
+            lineStyle: Desmos.Styles.DASHED,
+            lineWidth: 1
+          });
+        }
+      }
+
+      const x0Input = document.querySelector('input[name="x0"]');
+      if (x0Input && x0Input.value) {
+        const x0 = parseFloat(x0Input.value);
+        if (!isNaN(x0)) {
+          calculator.setExpression({
+            id: 'initial-point',
+            latex: `x=${x0}`,
+            color: '#8b5cf6',
+            lineStyle: Desmos.Styles.DASHED,
+            lineWidth: 1
+          });
+        }
+      }
+
+      console.log('Graph updated with function:', funcValue);
+    }
+
+
+    // Update graph when parameters are re-rendered
+    const originalRenderParameters = renderParameters;
+    renderParameters = function(method) {
+      originalRenderParameters(method);
+
+      setTimeout(() => {
+        const functionInput = document.querySelector('input[name="function"]');
+        if (functionInput) {
+          functionInput.addEventListener('input', updateGraph);
+          functionInput.addEventListener('change', updateGraph);
+          updateGraph();
+        }
+
+        const gFunctionInput = document.querySelector('input[name="g_function"]');
+        if (gFunctionInput) {
+          gFunctionInput.addEventListener('input', updateGraph);
+          gFunctionInput.addEventListener('change', updateGraph);
+        }
+
+        const aInput = document.querySelector('input[name="a"]');
+        const bInput = document.querySelector('input[name="b"]');
+        const x0Input = document.querySelector('input[name="x0"]');
+
+        if (aInput) aInput.addEventListener('input', updateGraph);
+        if (bInput) bInput.addEventListener('input', updateGraph);
+        if (x0Input) x0Input.addEventListener('input', updateGraph);
+      }, 50);
+    };
+  </script>
+</body>
+</html>
