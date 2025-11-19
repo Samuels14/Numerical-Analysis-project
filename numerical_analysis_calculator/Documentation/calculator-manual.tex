@@ -1,0 +1,2045 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% Configure listings for code examples
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\small,
+    commentstyle=\color{gray}\itshape,
+    keywordstyle=\bfseries\color{blue},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    frame=single,
+    xleftmargin=1em,
+    columns=flexible,
+    keepspaces=true,
+    language=Python
+}
+
+% Hyperref configuration
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\title{\textbf{User Manual\\Numerical Analysis Calculator}}
+\author{}
+\date{November 2025}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+\subsection{What is the Numerical Analysis Calculator?}
+
+The Numerical Analysis Calculator is a professional web application designed to solve complex mathematical problems using numerical methods. It implements \textbf{26 different methods} organized into three main categories:
+
+\begin{itemize}
+    \item \textbf{Nonlinear Equations} (7 methods)
+    \item \textbf{Linear Systems} (13 methods)
+    \item \textbf{Interpolation} (6 methods)
+\end{itemize}
+
+\subsection{Main Features}
+
+\begin{itemize}
+    \item[\checkmark] \textbf{Intuitive Interface}: Modern design inspired by professional calculators
+    \item[\checkmark] \textbf{Interactive Graphics}: Function visualization with Desmos API
+    \item[\checkmark] \textbf{Detailed Results}: Step-by-step iteration tables
+    \item[\checkmark] \textbf{Responsive}: Works on PC, tablets and smartphones
+    \item[\checkmark] \textbf{No Installation}: 100\% online web application
+    \item[\checkmark] \textbf{Intelligent Validation}: Educational error messages
+\end{itemize}
+
+\subsection{Who is This Application For?}
+
+\begin{itemize}
+    \item Engineering and exact sciences students
+    \item Mathematics and numerical analysis professors
+    \item Engineers who need to solve numerical problems
+    \item Researchers in scientific areas
+    \item Anyone interested in numerical methods
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Application Access}
+%=============================================================================
+
+\subsection{System Requirements}
+
+\textbf{Supported Browsers:}
+\begin{itemize}
+    \item Google Chrome 90+ (Recommended)
+    \item Mozilla Firefox 88+
+    \item Safari 14+
+    \item Microsoft Edge 90+
+\end{itemize}
+
+\textbf{Internet Connection:}
+\begin{itemize}
+    \item Required to load the application and Desmos graphics
+\end{itemize}
+
+\textbf{Devices:}
+\begin{itemize}
+    \item Desktop computers (Windows, Mac, Linux)
+    \item Laptops
+    \item Tablets (iPad, Android)
+    \item Smartphones (iOS, Android)
+\end{itemize}
+
+\subsection{How to Access}
+
+\begin{enumerate}
+    \item Open your web browser
+    \item Enter the application URL
+    \item The application will load automatically
+    \item No registration or login required
+\end{enumerate}
+
+\newpage
+%=============================================================================
+\section{User Interface}
+%=============================================================================
+
+\subsection{Main Components}
+
+\subsubsection{Header}
+\begin{itemize}
+    \item \textbf{Logo}: $\Sigma$ (Sigma) identifying symbol
+    \item \textbf{Title}: ``Numerical Calculator''
+    \item \textbf{Description}: Information about the application
+    \item \textbf{Available Functions}: List of supported mathematical functions
+\end{itemize}
+
+\subsubsection{Methods Panel (Left)}
+Contains four main tabs:
+\begin{itemize}
+    \item \textbf{Equation Solving}: Equation methods
+    \item \textbf{Linear Systems}: Linear equation systems
+    \item \textbf{Interpolation}: Interpolation methods
+    \item \textbf{Additional Methods}: Additional methods
+\end{itemize}
+
+\subsubsection{Results Panel (Right)}
+\begin{itemize}
+    \item \textbf{Graph}: Function visualization (when applicable)
+    \item \textbf{Results}: Detailed output with iteration tables
+    \item \textbf{Warnings}: Suggestions and informative messages
+\end{itemize}
+
+\subsection{Tab Navigation}
+
+\textbf{To switch between categories:}
+\begin{enumerate}
+    \item Click on the desired tab
+    \item Available methods will be displayed automatically
+    \item Select a method by clicking on its card
+\end{enumerate}
+
+\textbf{Visual indicators:}
+\begin{itemize}
+    \item Active tab: Blue background and bottom line
+    \item Selected method: Blue border and highlighted background
+\end{itemize}
+
+\subsection{Parameter Form}
+
+Once a method is selected, a dynamic form will appear with the necessary parameters:
+
+\begin{itemize}
+    \item \textbf{Text fields}: For mathematical functions
+    \item \textbf{Numeric fields}: For initial values, tolerances, etc.
+    \item \textbf{Text areas}: For matrices and vectors
+    \item \textbf{Calculate button}: Executes the selected method
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Nonlinear Equation Methods}
+%=============================================================================
+
+Nonlinear equation methods are used to find roots (values of $x$ where $f(x) = 0$) of functions.
+
+\subsection{Incremental Search}
+
+\textbf{Description:}\\
+Searches for intervals where the function changes sign, indicating the presence of a root.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item To explore a function and find all its roots
+    \item When you don't know where the roots are
+    \item As a preliminary step to other methods
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Function to analyze
+    \item \textbf{$x_0$}: Starting search point
+    \item \textbf{$\Delta$ (Delta)}: Increment (can be positive or negative)
+    \item \textbf{Nmax}: Maximum number of iterations
+\end{itemize}
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+Function: x**3 - x - 2
+x0: 0
+Delta: 0.5
+Nmax: 100
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item List of intervals $[a, b]$ where there is a sign change
+    \item Table with values of $x$ and $f(x)$ at each iteration
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Simple to understand
+    \item Finds multiple roots
+    \item Does not require derivatives
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Does not find multiple roots (where $f(x)$ touches the axis but does not cross)
+    \item Can be slow
+    \item Depends on the value of $\Delta$
+\end{itemize}
+
+\newpage
+\subsection{Bisection}
+
+\textbf{Description:}\\
+Repeatedly divides an interval in half until finding the root with desired precision.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When you have an interval $[a, b]$ where $f(a)$ and $f(b)$ have opposite signs
+    \item You need guaranteed convergence
+    \item The function is continuous
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Function to solve
+    \item \textbf{$a$}: Left endpoint of interval
+    \item \textbf{$b$}: Right endpoint of interval
+    \item \textbf{Tolerance}: Desired precision (e.g., $10^{-6}$)
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+Function: x**3 - x - 2
+a: 1
+b: 2
+Tolerance: 0.000001
+Nmax: 50
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Iteration table with:
+    \begin{itemize}
+        \item iter: Iteration number
+        \item $a$: Current left endpoint
+        \item $x_m$: Midpoint
+        \item $b$: Current right endpoint
+        \item $f(x_m)$: Function value at $x_m$
+        \item $E$: Absolute error
+    \end{itemize}
+    \item Final approximate root
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Always converges (if there is a root in the interval)
+    \item Very robust
+    \item Easy to implement
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Slow convergence
+    \item Requires initial interval with sign change
+    \item Does not work for multiple roots
+\end{itemize}
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item If $E <$ Tolerance: Root found with desired precision
+    \item If reached Nmax: Increase Nmax or reduce tolerance
+\end{itemize}
+
+\newpage
+\subsection{False Position}
+
+\textbf{Description:}\\
+Similar to bisection but uses linear interpolation instead of midpoint.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When you have an interval with sign change
+    \item You want faster convergence than bisection
+    \item The function is approximately linear in the interval
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Target function
+    \item \textbf{$a$}: Left endpoint
+    \item \textbf{$b$}: Right endpoint
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+Function: cos(x) - x
+a: 0
+b: 1
+Tolerance: 1e-7
+Nmax: 100
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Table similar to bisection
+    \item The point $x_m$ is calculated with the formula:
+    \[x_m = \frac{f(b) \cdot a - f(a) \cdot b}{f(b) - f(a)}\]
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Faster than bisection in many cases
+    \item Guarantees convergence
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Can converge very slowly if $f(a)$ and $f(b)$ are very different
+    \item Can ``stagnate'' at one endpoint
+\end{itemize}
+
+\subsection{Fixed Point}
+
+\textbf{Description:}\\
+Finds a value $x$ such that $x = g(x)$, transforming $f(x) = 0$ into $x = g(x)$.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When you can rewrite $f(x) = 0$ as $x = g(x)$
+    \item For equations that naturally have fixed-point form
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Original function (for graphing)
+    \item \textbf{Function $g(x)$}: Fixed-point function ($x = g(x)$)
+    \item \textbf{$x_0$}: Initial value
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+f(x): x**2 - 2
+g(x): sqrt(2)  (or also: 2/x)
+x0: 1.5
+Tolerance: 1e-6
+Nmax: 100
+\end{lstlisting}
+
+\textbf{How to Create $g(x)$:}
+
+From $f(x) = x^2 - 2 = 0$:
+\begin{itemize}
+    \item Option 1: $x^2 = 2 \rightarrow x = \sqrt{2} \rightarrow g(x) = \sqrt{2}$
+    \item Option 2: $x = \frac{2}{x} \rightarrow g(x) = \frac{2}{x}$
+\end{itemize}
+
+\textbf{Convergence Criterion:}\\
+For convergence, it must satisfy: $|g'(x)| < 1$ near the root
+
+\textbf{Results:}
+\begin{itemize}
+    \item Table with $x_i$, $g(x_i)$, $f(x_i)$ and error
+    \item Approximate value of the root
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Simple to implement
+    \item Does not require derivatives
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Does not always converge
+    \item Critically depends on the choice of $g(x)$
+    \item Can diverge with bad $x_0$
+\end{itemize}
+
+\newpage
+\subsection{Newton-Raphson (Newton)}
+
+\textbf{Description:}\\
+Uses the tangent to the function to approximate the root. Quadratic convergence.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When you have or can calculate $f'(x)$
+    \item You need fast convergence
+    \item You have a good initial estimate
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Target function
+    \item \textbf{Derivative $f'(x)$}: Derivative of $f$ (optional, calculated numerically if not provided)
+    \item \textbf{$x_0$}: Initial value
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Formula:}
+\[x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}\]
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+f(x): x**3 - 2*x - 5
+f'(x): 3*x**2 - 2
+x0: 2
+Tolerance: 1e-10
+Nmax: 50
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Table with iter, $x_i$, $f(x_i)$, and error
+    \item Typical convergence in 3-5 iterations
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Quadratic convergence (very fast)
+    \item Requires few iterations
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Requires calculating $f'(x)$
+    \item Can diverge if $x_0$ is poorly chosen
+    \item Fails if $f'(x) = 0$
+\end{itemize}
+
+\textbf{Tips:}
+\begin{itemize}
+    \item Choose $x_0$ close to the root
+    \item If you know $f'(x)$ analytically, enter it for better precision
+    \item If it diverges, try another $x_0$ or use bisection first
+\end{itemize}
+
+\newpage
+\subsection{Secant}
+
+\textbf{Description:}\\
+Approximation of Newton's method that does not require calculating derivatives.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When calculating $f'(x)$ is difficult or expensive
+    \item You want fast convergence without derivatives
+    \item You have two initial values close to the root
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Target function
+    \item \textbf{$x_0$}: First initial value
+    \item \textbf{$x_1$}: Second initial value
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Formula:}
+\[x_{n+1} = x_n - f(x_n) \cdot \frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}\]
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+f(x): exp(x) - 3*x
+x0: 0
+x1: 1
+Tolerance: 1e-8
+Nmax: 50
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Iteration table
+    \item Super-linear convergence (between linear and quadratic)
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Does not require derivatives
+    \item Faster than fixed point
+    \item Super-linear convergence
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Requires two initial values
+    \item Can diverge if $x_0$ and $x_1$ are poorly chosen
+    \item Slightly slower than Newton
+\end{itemize}
+
+\subsection{Newton Multiple Roots}
+
+\textbf{Description:}\\
+Variant of Newton's method designed for multiple roots (where $f(x) = f'(x) = 0$).
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When you suspect the root has multiplicity $> 1$
+    \item Standard Newton converges very slowly
+    \item You have $f(x)$, $f'(x)$ and $f''(x)$
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Target function
+    \item \textbf{Derivative $f'(x)$}: First derivative
+    \item \textbf{Second Derivative $f''(x)$}: Second derivative
+    \item \textbf{$x_0$}: Initial value
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Formula:}
+\[x_{n+1} = x_n - \frac{f(x) \cdot f'(x)}{[f'(x)]^2 - f(x) \cdot f''(x)}\]
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+f(x): (x - 2)**3
+f'(x): 3*(x - 2)**2
+f''(x): 6*(x - 2)
+x0: 1.5
+Tolerance: 1e-10
+Nmax: 50
+\end{lstlisting}
+
+\textbf{Multiple Roots:}
+\begin{itemize}
+    \item Multiplicity 2: $f(x) = (x-a)^2$
+    \item Multiplicity 3: $f(x) = (x-a)^3$
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Quadratic convergence even for multiple roots
+    \item Standard Newton only converges linearly for these roots
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Requires calculating $f''(x)$
+    \item More complex to implement
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Linear System Methods}
+%=============================================================================
+
+Linear system methods solve systems of equations of the form $Ax = b$.
+
+\subsection{Input Format}
+
+\textbf{Matrix A (coefficients):}
+\begin{lstlisting}[style=code]
+4 -1 0
+-1 4 -1
+0 -1 4
+\end{lstlisting}
+
+\textbf{Vector b (independent terms):}
+\begin{lstlisting}[style=code]
+15 10 10
+\end{lstlisting}
+
+\textbf{Format:}
+\begin{itemize}
+    \item Each row on a line
+    \item Numbers separated by spaces
+    \item No commas or brackets
+\end{itemize}
+
+\subsection{Gaussian Elimination}
+
+\textbf{Description:}\\
+Converts the matrix to upper triangular form through elementary operations.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item For small to medium systems (up to $\sim$100 equations)
+    \item When the matrix is not singular
+    \item You need exact solution (without iterations)
+\end{itemize}
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \textbf{Matrix A}: $n \times n$ coefficient matrix
+    \item \textbf{Vector b}: Independent terms vector
+\end{itemize}
+
+\textbf{Usage Example:}
+\begin{lstlisting}[style=code]
+Matrix A:
+2 1 -1
+-3 -1 2
+-2 1 2
+
+Vector b:
+8 -11 -3
+\end{lstlisting}
+
+\textbf{Process:}
+\begin{enumerate}
+    \item \textbf{Forward elimination}: Creates zeros below the diagonal
+    \item \textbf{Back substitution}: Solves from the last equation
+\end{enumerate}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Elimination stages (intermediate matrices)
+    \item Solution vector $x$
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Direct method (non-iterative)
+    \item Exact solution (within numerical precision)
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Can fail if there is zero pivot
+    \item Numerically unstable without pivoting
+\end{itemize}
+
+\newpage
+\subsection{Partial Pivoting}
+
+\textbf{Description:}\\
+Gaussian Elimination with row interchange to improve stability.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item When simple Gaussian fails
+    \item To improve numerical stability
+    \item As standard method for general systems
+\end{itemize}
+
+\textbf{Difference with Simple Gaussian:}
+\begin{itemize}
+    \item At each step, searches for the element of largest absolute value in the column
+    \item Exchanges rows to put that element on the diagonal
+\end{itemize}
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+Matrix A:
+0.0001 1
+1 1
+
+Vector b:
+1 2
+\end{lstlisting}
+
+Without pivoting: Incorrect result\\
+With pivoting: Correct result
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item More numerically stable
+    \item Prevents division by zero
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Slightly slower than simple Gaussian
+\end{itemize}
+
+\subsection{Total Pivoting}
+
+\textbf{Description:}\\
+Searches for the pivot in the entire submatrix (rows and columns).
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Maximum numerical stability required
+    \item Very ill-conditioned matrices
+    \item When partial pivoting is not enough
+\end{itemize}
+
+\textbf{Process:}
+\begin{itemize}
+    \item Searches for maximum element in the submatrix
+    \item Exchanges rows AND columns
+    \item More complex but more stable
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Maximum numerical stability
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Slower
+    \item More complex (requires marking column permutations)
+\end{itemize}
+
+\newpage
+\subsection{LU Decomposition}
+
+\textbf{Description:}\\
+Decomposes $A$ into product of two matrices: $A = LU$
+\begin{itemize}
+    \item $L$: Lower triangular
+    \item $U$: Upper triangular
+\end{itemize}
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item You need to solve multiple systems with the same $A$
+    \item Calculate determinants
+    \item Matrix inversion
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Efficient for multiple $b$ vectors
+    \item Useful for additional calculations (determinant, inverse)
+\end{itemize}
+
+\textbf{Process:}
+\begin{enumerate}
+    \item Decompose $A = LU$
+    \item Solve $Ly = b$ (forward substitution)
+    \item Solve $Ux = y$ (back substitution)
+\end{enumerate}
+
+\textbf{Variants:}
+
+\subsubsection{LU Simple}
+\begin{itemize}
+    \item Without pivoting
+    \item Can fail if there is zero pivot
+\end{itemize}
+
+\subsubsection{LU Partial Pivot}
+\begin{itemize}
+    \item With partial pivoting: $PA = LU$
+    \item More stable
+\end{itemize}
+
+\subsubsection{Crout}
+\begin{itemize}
+    \item $L$ has diagonal, $U$ has 1s on diagonal
+    \item Useful for certain algorithms
+\end{itemize}
+
+\subsubsection{Doolittle}
+\begin{itemize}
+    \item $L$ has 1s on diagonal, $U$ has diagonal
+    \item More common
+\end{itemize}
+
+\subsection{Cholesky Decomposition}
+
+\textbf{Description:}\\
+Special factorization for symmetric and positive definite matrices: $A = LL^T$
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item $A$ is symmetric ($A_{ij} = A_{ji}$)
+    \item $A$ is positive definite (all eigenvalues $> 0$)
+    \item Common in: least squares, finite elements
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Faster than LU (half the operations)
+    \item More numerically stable
+    \item Requires less memory
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Only for symmetric and positive definite matrices
+\end{itemize}
+
+\textbf{Valid Matrix Example:}
+\begin{lstlisting}[style=code]
+4 2 1
+2 5 3
+1 3 6
+\end{lstlisting}
+
+\textbf{How to Verify if Positive Definite:}
+\begin{itemize}
+    \item All principal minors are positive
+    \item Or: All eigenvalues are positive
+\end{itemize}
+
+\newpage
+\subsection{Iterative Methods}
+
+Iterative methods start from an initial solution $x_0$ and refine it.
+
+\subsubsection{Jacobi}
+
+\textbf{Description:}\\
+Solves each variable in terms of the others and updates simultaneously.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Large and sparse matrices
+    \item Diagonally dominant
+    \item Parallelization
+\end{itemize}
+
+\textbf{Additional Parameters:}
+\begin{itemize}
+    \item \textbf{$x_0$ vector}: Initial solution (optional, default zeros)
+    \item \textbf{Tolerance}: Precision
+    \item \textbf{Nmax}: Maximum iterations
+\end{itemize}
+
+\textbf{Convergence Criterion:}
+\begin{itemize}
+    \item Spectral radius of $T < 1$
+    \item Diagonally dominant (sufficient but not necessary)
+\end{itemize}
+
+\textbf{Diagonally Dominant:}
+\[|a_{ii}| > \sum_{j \neq i} |a_{ij}|\]
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+Matrix A:
+4 -1 0
+-1 4 -1
+0 -1 4
+
+Vector b:
+15 10 10
+
+x0: (optional)
+Tolerance: 1e-6
+Nmax: 100
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Iteration matrix $T$
+    \item Vector $C$
+    \item Spectral radius
+    \item Iteration table
+    \item Warning if may diverge
+\end{itemize}
+
+\subsubsection{Gauss-Seidel}
+
+\textbf{Description:}\\
+Similar to Jacobi but uses updated values immediately.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Same type of matrices as Jacobi
+    \item Typically converges faster than Jacobi
+\end{itemize}
+
+\textbf{Difference with Jacobi:}
+\begin{itemize}
+    \item Jacobi: Updates all variables simultaneously
+    \item Gauss-Seidel: Updates variables sequentially using new values
+\end{itemize}
+
+\textbf{Advantages over Jacobi:}
+\begin{itemize}
+    \item Faster convergence (typically)
+    \item Requires less memory
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Not parallelizable
+\end{itemize}
+
+\newpage
+\subsubsection{SOR (Successive Over-Relaxation)}
+
+\textbf{Description:}\\
+Gauss-Seidel with relaxation factor $\omega$ to accelerate convergence.
+
+\textbf{Additional Parameters:}
+\begin{itemize}
+    \item \textbf{omega ($\omega$)}: Relaxation factor ($0 < \omega < 2$)
+    \begin{itemize}
+        \item $\omega < 1$: Under-relaxation (more stable)
+        \item $\omega = 1$: Standard Gauss-Seidel
+        \item $\omega > 1$: Over-relaxation (faster)
+    \end{itemize}
+\end{itemize}
+
+\textbf{How to Choose $\omega$:}
+\begin{itemize}
+    \item Theoretical: Optimal $\omega$ depends on spectral radius of Gauss-Seidel
+    \item Practical: Try values between 1.0 and 1.9
+    \item Typical: 1.5 is good starting point
+\end{itemize}
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+omega: 1.5
+\end{lstlisting}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Can be much faster than Gauss-Seidel
+    \item Useful for large matrices
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Choosing optimal $\omega$ can be difficult
+\end{itemize}
+
+\subsection{Forward/Backward Substitution}
+
+\textbf{Description:}\\
+Direct methods for triangular systems.
+
+\subsubsection{Forward Substitution}
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Lower triangular system $Lx = b$
+    \item As step in LU factorization
+\end{itemize}
+
+\textbf{Input format:}\\
+Augmented matrix $[L|b]$:
+\begin{lstlisting}[style=code]
+2 0 0 4
+1 3 0 5
+2 1 4 6
+\end{lstlisting}
+
+\subsubsection{Backward Substitution}
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Upper triangular system $Ux = b$
+    \item As step in LU factorization or Gaussian
+\end{itemize}
+
+\textbf{Input format:}\\
+Augmented matrix $[U|b]$:
+\begin{lstlisting}[style=code]
+2 1 -1 8
+0 3 2 -11
+0 0 4 -3
+\end{lstlisting}
+
+\newpage
+%=============================================================================
+\section{Interpolation Methods}
+%=============================================================================
+
+Interpolation constructs a function that passes through a given set of points.
+
+\subsection{Input Format}
+
+\textbf{X Points ($x$ coordinates):}
+\begin{lstlisting}[style=code]
+0 1 2 3 4
+\end{lstlisting}
+
+\textbf{Y Points ($y$ coordinates):}
+\begin{lstlisting}[style=code]
+1 2.5 3.2 4.1 5.5
+\end{lstlisting}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Same number of values in X and Y
+    \item Minimum 2 points
+    \item Points will be automatically sorted by X
+\end{itemize}
+
+\subsection{Vandermonde}
+
+\textbf{Description:}\\
+Constructs a polynomial $P(x)$ of degree $n-1$ that passes through $n$ points.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Few points ($< 10$)
+    \item You need the explicit polynomial
+    \item Well-spaced points
+\end{itemize}
+
+\textbf{Method:}\\
+Solves system $Vc = y$ where $V$ is the Vandermonde matrix
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+X: 0 1 2
+Y: 1 3 2
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Vandermonde matrix
+    \item Polynomial coefficients $[a_0, a_1, a_2, \ldots]$
+    \item Polynomial: $P(x) = a_0x^n + a_1x^{n-1} + \cdots + a_n$
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Obtains explicit polynomial
+    \item Simple to understand
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Numerically unstable for many points
+    \item Runge phenomenon (oscillations) with many points
+\end{itemize}
+
+\textbf{Warning:}\\
+For more than 10 points, consider using splines
+
+\newpage
+\subsection{Newton (Divided Differences)}
+
+\textbf{Description:}\\
+Constructs polynomial using divided differences.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item You need to add points incrementally
+    \item More stable than Vandermonde
+    \item Efficient evaluation
+\end{itemize}
+
+\textbf{Method:}\\
+Constructs divided differences table
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+X: 1 2 3 4
+Y: 1 0 3 4
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Divided differences table
+    \item Newton coefficients $[c_0, c_1, c_2, \ldots]$
+    \item Polynomial: $P(x) = c_0 + c_1(x-x_0) + c_2(x-x_0)(x-x_1) + \cdots$
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item More stable than Vandermonde
+    \item Easy to add points
+    \item Efficient evaluation
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Polynomial in non-standard form
+\end{itemize}
+
+\subsection{Lagrange}
+
+\textbf{Description:}\\
+Constructs polynomial as linear combination of Lagrange basis polynomials.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item You need theoretical form of polynomial
+    \item Mathematical analysis
+    \item Evaluation at few points
+\end{itemize}
+
+\textbf{Method:}\\
+\[P(x) = \sum y_i L_i(x)\]
+
+where
+\[L_i(x) = \prod_{j \neq i} \frac{(x-x_j)}{(x_i-x_j)}\]
+
+\textbf{Example:}
+\begin{lstlisting}[style=code]
+X: 0 1 2
+Y: 1 2 0
+\end{lstlisting}
+
+\textbf{Results:}
+\begin{itemize}
+    \item Basis polynomials $L_i(x)$
+    \item Final combination
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Mathematically elegant form
+    \item Does not require solving systems
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Expensive to evaluate
+    \item Same Runge problem as Vandermonde
+\end{itemize}
+
+\newpage
+\subsection{Splines}
+
+Splines divide the interval into segments and use different polynomials in each.
+
+\subsubsection{Linear Splines}
+
+\textbf{Description:}\\
+Joins points with straight lines.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Data with abrupt changes
+    \item Simplicity over smoothness
+    \item Basic visualization
+\end{itemize}
+
+\textbf{Form:}\\
+$S_i(x) = a_ix + b_i$ for $x \in [x_i, x_{i+1}]$
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Very simple
+    \item No oscillations
+    \item Fast to calculate
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Not smooth (discontinuity in derivatives)
+\end{itemize}
+
+\subsubsection{Quadratic Splines}
+
+\textbf{Description:}\\
+Parabolas that join points with continuity in first derivative.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item You need more smoothness than linear
+    \item You don't need continuous second derivative
+\end{itemize}
+
+\textbf{Form:}\\
+$S_i(x) = a_ix^2 + b_ix + c_i$
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Minimum 3 points
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Smooth ($C^1$ continuous)
+    \item Fewer oscillations than single polynomial
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Discontinuous second derivative
+\end{itemize}
+
+\subsubsection{Cubic Splines}
+
+\textbf{Description:}\\
+Cubic polynomials with continuity up to second derivative.
+
+\textbf{When to Use It:}
+\begin{itemize}
+    \item Maximum smoothness
+    \item Scientific data
+    \item Animation and graphics
+    \item Standard in professional interpolation
+\end{itemize}
+
+\textbf{Form:}\\
+$S_i(x) = a_ix^3 + b_ix^2 + c_ix + d_i$
+
+\textbf{Boundary Conditions (Natural Splines):}
+\begin{itemize}
+    \item $S''(x_0) = 0$
+    \item $S''(x_n) = 0$
+\end{itemize}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Maximum smoothness ($C^2$ continuous)
+    \item Minimal oscillations
+    \item Industry standard
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item More complex to calculate
+\end{itemize}
+
+\textbf{Spline Comparison:}
+\begin{itemize}
+    \item Linear: Simple, not smooth
+    \item Quadratic: Medium smoothness
+    \item Cubic: Maximum smoothness (recommended)
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Mathematical Function Syntax}
+%=============================================================================
+
+The application uses \textbf{SymPy} to process mathematical functions.
+
+\subsection{Basic Operators}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Operator} & \textbf{Symbol} & \textbf{Example} \\
+\midrule
+Addition & \texttt{+} & \texttt{x + 3} \\
+Subtraction & \texttt{-} & \texttt{x - 5} \\
+Multiplication & \texttt{*} & \texttt{2*x} \\
+Division & \texttt{/} & \texttt{x/2} \\
+Power & \texttt{**} & \texttt{x**2} ($x^2$) \\
+Parentheses & \texttt{()} & \texttt{(x + 1)*(x - 2)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mathematical Functions}
+
+\subsubsection{Powers and Roots}
+\begin{lstlisting}[style=code]
+x**2          # x squared
+x**3          # x cubed
+x**0.5        # Square root (also: sqrt(x))
+x**(1/3)      # Cube root
+sqrt(x)       # Square root
+\end{lstlisting}
+
+\subsubsection{Exponentials and Logarithms}
+\begin{lstlisting}[style=code]
+exp(x)        # e^x
+log(x)        # Natural logarithm (ln x)
+ln(x)         # Natural logarithm (alias of log)
+log(x, 10)    # Base 10 logarithm
+log(x, 2)     # Base 2 logarithm
+\end{lstlisting}
+
+\subsubsection{Trigonometric}
+\begin{lstlisting}[style=code]
+sin(x)        # Sine
+cos(x)        # Cosine
+tan(x)        # Tangent
+cot(x)        # Cotangent
+sec(x)        # Secant
+csc(x)        # Cosecant
+\end{lstlisting}
+
+\subsubsection{Inverse Trigonometric}
+\begin{lstlisting}[style=code]
+asin(x)       # Arcsine
+acos(x)       # Arccosine
+atan(x)       # Arctangent
+\end{lstlisting}
+
+\subsubsection{Hyperbolic}
+\begin{lstlisting}[style=code]
+sinh(x)       # Hyperbolic sine
+cosh(x)       # Hyperbolic cosine
+tanh(x)       # Hyperbolic tangent
+\end{lstlisting}
+
+\subsubsection{Other Functions}
+\begin{lstlisting}[style=code]
+abs(x)        # Absolute value |x|
+sign(x)       # Sign of x (-1, 0, 1)
+\end{lstlisting}
+
+\subsection{Constants}
+
+\begin{lstlisting}[style=code]
+E             # Number e (2.71828...)
+pi            # Number pi (3.14159...)
+\end{lstlisting}
+
+\subsection{Valid Function Examples}
+
+\subsubsection{Polynomials}
+\begin{lstlisting}[style=code]
+x**3 - 2*x + 1
+x**4 - 5*x**3 + 6*x**2 - x + 2
+(x + 1)*(x - 2)*(x + 3)
+\end{lstlisting}
+
+\subsubsection{Trigonometric}
+\begin{lstlisting}[style=code]
+sin(x) - 0.5
+cos(x)**2 + sin(x)**2 - 1
+tan(x) - x
+sin(2*x) - cos(x)
+\end{lstlisting}
+
+\subsubsection{Exponentials}
+\begin{lstlisting}[style=code]
+exp(x) - 3
+exp(-x**2)
+2**x - 8
+\end{lstlisting}
+
+\subsubsection{Logarithmic}
+\begin{lstlisting}[style=code]
+log(x) - 2
+ln(x**2 + 1)
+log(x, 10) - 1
+\end{lstlisting}
+
+\subsubsection{Combined}
+\begin{lstlisting}[style=code]
+x*exp(-x) - 0.1
+sin(x)/x - 0.5
+log(sin(x)**2 + 1) - (1/2)
+x**2 * cos(x) - 1
+exp(x) * sin(x) - 1
+\end{lstlisting}
+
+\subsection{Common Errors}
+
+\textbf{Incorrect:}
+\begin{lstlisting}[style=code]
+2x            # Missing *
+x^2           # Use **, not superscript
+sen(x)        # Must be sin(x)
+^             # Use **, not ^
+x**2 + 1)     # Unbalanced parentheses
+\end{lstlisting}
+
+\textbf{Correct:}
+\begin{lstlisting}[style=code]
+2*x
+x**2
+sin(x)
+x**2 + 1
+\end{lstlisting}
+
+\newpage
+%=============================================================================
+\section{Complete Practical Examples}
+%=============================================================================
+
+\subsection{Example: Find $\sqrt{2}$}
+
+\textbf{Problem:} Find the square root of 2 using Newton-Raphson.
+
+\textbf{Solution:}
+
+\begin{enumerate}
+    \item \textbf{Formulate:} $\sqrt{2}$ is root of $f(x) = x^2 - 2$
+
+    \item \textbf{Parameters:}
+    \begin{itemize}
+        \item Function: \texttt{x**2 - 2}
+        \item Derivative: \texttt{2*x}
+        \item $x_0$: \texttt{1.5}
+        \item Tolerance: \texttt{1e-10}
+        \item Nmax: \texttt{20}
+    \end{itemize}
+
+    \item \textbf{Steps in the Calculator:}
+    \begin{itemize}
+        \item Select ``Equation Solving'' tab
+        \item Click on ``Newton-Raphson''
+        \item Enter function and derivative
+        \item Click ``Calculate''
+    \end{itemize}
+
+    \item \textbf{Expected Result:}
+    \begin{itemize}
+        \item Root: 1.414213562373095...
+        \item Converges in $\sim$5 iterations
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Example: System of 3 Equations}
+
+\textbf{Problem:} Solve the system:
+\begin{align*}
+2x + y - z &= 8 \\
+-3x - y + 2z &= -11 \\
+-2x + y + 2z &= -3
+\end{align*}
+
+\textbf{Solution:}
+
+\begin{enumerate}
+    \item \textbf{Matrix Format:} $Ax = b$
+
+    \item \textbf{Parameters:}
+    \begin{itemize}
+        \item Matrix A:
+\begin{lstlisting}[style=code]
+2 1 -1
+-3 -1 2
+-2 1 2
+\end{lstlisting}
+        \item Vector b: \texttt{8 -11 -3}
+    \end{itemize}
+
+    \item \textbf{Method:} Gaussian Elimination with Partial Pivoting
+
+    \item \textbf{Steps:}
+    \begin{itemize}
+        \item ``Linear Systems'' tab
+        \item Click ``Partial Pivot''
+        \item Enter matrix and vector
+        \item Calculate
+    \end{itemize}
+
+    \item \textbf{Result:} $x = [2, 3, -1]$
+
+    \item \textbf{Verification:}
+    \begin{itemize}
+        \item $2(2) + 3 - (-1) = 8$ \checkmark
+        \item $-3(2) - 3 + 2(-1) = -11$ \checkmark
+        \item $-2(2) + 3 + 2(-1) = -3$ \checkmark
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+\subsection{Example: Experimental Data Interpolation}
+
+\textbf{Problem:} You have temperature vs time measurements:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Time (min)} & 0 & 1 & 2 & 3 & 4 \\
+\textbf{Temp (°C)} & 20 & 25 & 28 & 30 & 31 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Construct a function that interpolates this data.
+
+\textbf{Solution with Cubic Spline:}
+
+\begin{enumerate}
+    \item \textbf{Parameters:}
+    \begin{itemize}
+        \item X values: \texttt{0 1 2 3 4}
+        \item Y values: \texttt{20 25 28 30 31}
+    \end{itemize}
+
+    \item \textbf{Method:} Cubic Spline
+
+    \item \textbf{Result:}
+    \begin{itemize}
+        \item 4 cubic polynomials (one for each interval)
+        \item Smooth function passing through all points
+    \end{itemize}
+
+    \item \textbf{Use:}
+    \begin{itemize}
+        \item Estimate temperature at $t = 2.5$ min
+        \item Evaluate corresponding spline
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Example: Method Comparison}
+
+\textbf{Problem:} Find root of $f(x) = x^3 - x - 2$ near $x = 1.5$
+
+\textbf{Comparison:}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{Iterations} & \textbf{Precision} & \textbf{Comments} \\
+\midrule
+Bisection $[1, 2]$ & 20 & $10^{-6}$ & Slow but safe \\
+False Position & 15 & $10^{-6}$ & Faster \\
+Newton ($x_0=1.5$) & 5 & $10^{-10}$ & Very fast \\
+Secant ($x_0=1, x_1=2$) & 6 & $10^{-10}$ & Fast without derivative \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Conclusion:}
+\begin{itemize}
+    \item For guarantee: Bisection
+    \item For speed with derivative: Newton
+    \item For speed without derivative: Secant
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Results Interpretation}
+%=============================================================================
+
+\subsection{Iteration Tables}
+
+\subsubsection{For Equation Methods}
+
+\textbf{Typical columns:}
+\begin{itemize}
+    \item \textbf{iter}: Iteration number
+    \item \textbf{$x_i$}: Current approximation
+    \item \textbf{$f(x_i)$}: Function value
+    \item \textbf{E}: Absolute error $|x_i - x_{i-1}|$
+\end{itemize}
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item \textbf{E decreases}: Method converges \checkmark
+    \item \textbf{E increases}: Method diverges $\times$
+    \item \textbf{E stagnant}: Slow convergence or stagnation
+\end{itemize}
+
+\textbf{Stopping Criterion:}
+\begin{itemize}
+    \item $E <$ Tolerance: Solution found
+    \item iter = Nmax: Increase Nmax or change method
+\end{itemize}
+
+\subsubsection{For Iterative Methods (Systems)}
+
+\textbf{Typical columns:}
+\begin{itemize}
+    \item \textbf{iter}: Iteration
+    \item \textbf{E}: Error (norm of $|x^{(n)} - x^{(n-1)}|$)
+    \item \textbf{$x_0, x_1, x_2, \ldots$}: Solution components
+\end{itemize}
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item \textbf{Spectral radius $< 1$}: Method converges
+    \item \textbf{Spectral radius $\geq 1$}: Method may diverge
+\end{itemize}
+
+\subsection{Warning Messages}
+
+\subsubsection{``Function does not change sign''}
+\begin{itemize}
+    \item \textbf{Cause:} No root in interval $[a, b]$
+    \item \textbf{Solution:} Use Incremental Search to find valid interval
+\end{itemize}
+
+\subsubsection{``Zero pivot encountered''}
+\begin{itemize}
+    \item \textbf{Cause:} Division by zero in elimination
+    \item \textbf{Solution:} Use method with pivoting
+\end{itemize}
+
+\subsubsection{``Matrix is not positive definite''}
+\begin{itemize}
+    \item \textbf{Cause:} Cholesky requires positive definite matrix
+    \item \textbf{Solution:} Use LU instead of Cholesky
+\end{itemize}
+
+\subsubsection{``Spectral radius $\geq 1$''}
+\begin{itemize}
+    \item \textbf{Cause:} Iterative method may not converge
+    \item \textbf{Solution:}
+    \begin{itemize}
+        \item Verify diagonal dominance
+        \item Adjust omega in SOR
+        \item Use direct method
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{``Tolerance is very large''}
+\begin{itemize}
+    \item \textbf{Suggestion:} Result may be imprecise
+    \item \textbf{Action:} Reduce tolerance for greater precision
+\end{itemize}
+
+\subsection{Graphics}
+
+\textbf{Graph Elements:}
+\begin{itemize}
+    \item \textbf{Function $f(x)$}: Main curve
+    \item \textbf{X axis}: $x$ values
+    \item \textbf{Y axis}: $f(x)$ values
+    \item \textbf{X-axis crossing points}: Roots of $f(x) = 0$
+\end{itemize}
+
+\textbf{Use:}
+\begin{itemize}
+    \item Visualize function behavior
+    \item Identify number and location of roots
+    \item Verify results
+\end{itemize}
+
+\textbf{Desmos Interactivity:}
+\begin{itemize}
+    \item Zoom: Mouse wheel
+    \item Pan: Drag
+    \item Reset: Click home icon
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Use Cases}
+%=============================================================================
+
+\subsection{Engineering}
+
+\subsubsection{Structural Analysis}
+\begin{itemize}
+    \item \textbf{System:} Equilibrium equations
+    \item \textbf{Method:} Gaussian Elimination or LU
+    \item \textbf{Example:} Calculate forces in truss
+\end{itemize}
+
+\subsubsection{Electrical Circuits}
+\begin{itemize}
+    \item \textbf{System:} Kirchhoff's laws
+    \item \textbf{Method:} Iterative methods for large networks
+    \item \textbf{Example:} Mesh currents
+\end{itemize}
+
+\subsubsection{Heat Transfer}
+\begin{itemize}
+    \item \textbf{Method:} Finite differences $\rightarrow$ Linear system
+    \item \textbf{Solver:} Gauss-Seidel or SOR
+    \item \textbf{Use:} Temperature distribution
+\end{itemize}
+
+\subsection{Sciences}
+
+\subsubsection{Chemistry}
+\begin{itemize}
+    \item \textbf{Problem:} Chemical equilibrium
+    \item \textbf{Method:} Newton-Raphson
+    \item \textbf{Example:} Equilibrium constants
+\end{itemize}
+
+\subsubsection{Physics}
+\begin{itemize}
+    \item \textbf{Problem:} Trajectories, energies
+    \item \textbf{Method:} Various depending on problem
+    \item \textbf{Example:} Planetary orbits
+\end{itemize}
+
+\subsubsection{Biology}
+\begin{itemize}
+    \item \textbf{Problem:} Population models
+    \item \textbf{Method:} Interpolation for experimental data
+    \item \textbf{Example:} Population growth
+\end{itemize}
+
+\subsection{Finance}
+
+\subsubsection{IRR Calculation (Internal Rate of Return)}
+\begin{itemize}
+    \item \textbf{Equation:} NPV = 0
+    \item \textbf{Method:} Bisection or Newton
+    \item \textbf{Use:} Evaluate investment projects
+\end{itemize}
+
+\subsubsection{Option Models}
+\begin{itemize}
+    \item \textbf{System:} Discretized Black-Scholes equations
+    \item \textbf{Method:} Linear systems
+    \item \textbf{Use:} Derivative valuation
+\end{itemize}
+
+\subsection{Education}
+
+\subsubsection{Manual Calculation Verification}
+\begin{itemize}
+    \item \textbf{Use:} Check exercises
+    \item \textbf{Advantage:} See complete iteration table
+\end{itemize}
+
+\subsubsection{Method Comparison}
+\begin{itemize}
+    \item \textbf{Use:} Understand differences
+    \item \textbf{Example:} Why is Newton faster?
+\end{itemize}
+
+\subsubsection{Visualization}
+\begin{itemize}
+    \item \textbf{Use:} Graphics to understand concepts
+    \item \textbf{Example:} See convergence graphically
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Troubleshooting}
+%=============================================================================
+
+\subsection{Common Problems}
+
+\subsubsection{``Application Error''}
+\begin{itemize}
+    \item \textbf{Cause:} Error in function syntax
+    \item \textbf{Solution:}
+    \begin{itemize}
+        \item Verify syntax (use \texttt{*} for multiplication)
+        \item Use parentheses correctly
+        \item Consult syntax section
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Incorrect Result}
+\textbf{Possible causes:}
+\begin{itemize}
+    \item Incorrectly entered function
+    \item Incorrect parameters
+    \item Inappropriate method for the problem
+\end{itemize}
+
+\textbf{Verification:}
+\begin{itemize}
+    \item Evaluate $f(\text{root}) \approx 0$
+    \item Substitute solution in original system
+    \item Compare with manual calculation
+\end{itemize}
+
+\subsubsection{Does Not Converge}
+\textbf{For Equations:}
+\begin{itemize}
+    \item Try better initial $x_0$
+    \item Increase Nmax
+    \item Change method
+\end{itemize}
+
+\textbf{For Iterative Systems:}
+\begin{itemize}
+    \item Verify diagonal dominance
+    \item Adjust omega (SOR)
+    \item Use direct method
+\end{itemize}
+
+\subsubsection{Graph Not Displayed}
+\textbf{Causes:}
+\begin{itemize}
+    \item Lost internet connection
+    \item Function with restricted domain
+    \item Syntax error
+\end{itemize}
+
+\textbf{Solution:}
+\begin{itemize}
+    \item Verify connection
+    \item Simplify function to test
+    \item Reload page
+\end{itemize}
+
+\subsection{Best Practices}
+
+\subsubsection{Choosing Appropriate Method}
+
+\textbf{For Equations:}
+\begin{enumerate}
+    \item Do you have interval $[a, b]$? $\rightarrow$ Bisection/False Position
+    \item Can you calculate $f'(x)$? $\rightarrow$ Newton
+    \item Want speed without derivative? $\rightarrow$ Secant
+    \item Explore roots? $\rightarrow$ Incremental Search first
+\end{enumerate}
+
+\textbf{For Linear Systems:}
+\begin{enumerate}
+    \item Small system ($<100$)? $\rightarrow$ Gaussian/LU
+    \item Large and sparse system? $\rightarrow$ Iterative (Jacobi/GS/SOR)
+    \item Symmetric positive definite matrix? $\rightarrow$ Cholesky
+    \item Maximum stability? $\rightarrow$ Total Pivoting
+\end{enumerate}
+
+\textbf{For Interpolation:}
+\begin{enumerate}
+    \item Few points ($<10$)? $\rightarrow$ Polynomial (Newton/Lagrange)
+    \item Many points? $\rightarrow$ Splines
+    \item Maximum smoothness? $\rightarrow$ Cubic Spline
+    \item Simplicity? $\rightarrow$ Linear Spline
+\end{enumerate}
+
+\subsubsection{Validate Results}
+
+\textbf{Equations:}
+\begin{quote}
+Verify: $f(\text{root}) \approx 0$
+\end{quote}
+
+\textbf{Systems:}
+\begin{quote}
+Verify: $Ax \approx b$\\
+Calculate: $\|Ax - b\|$
+\end{quote}
+
+\textbf{Interpolation:}
+\begin{quote}
+Verify: $P(x_i) = y_i$ for all points
+\end{quote}
+
+\subsubsection{Precision vs Cost}
+
+\textbf{High Precision (Small Tolerance):}
+\begin{itemize}
+    \item More iterations
+    \item More time
+    \item Better result
+\end{itemize}
+
+\textbf{Low Precision (Large Tolerance):}
+\begin{itemize}
+    \item Fewer iterations
+    \item Faster
+    \item May be sufficient
+\end{itemize}
+
+\textbf{Recommendations:}
+\begin{itemize}
+    \item Engineering: $10^{-6}$ to $10^{-10}$
+    \item Finance: $10^{-8}$
+    \item Education: $10^{-6}$
+\end{itemize}
+
+\newpage
+%=============================================================================
+\section{Glossary}
+%=============================================================================
+
+\begin{description}
+    \item[Convergence] Property that iterations approach the solution.
+
+    \item[Linear Convergence] Error reduces by constant factor each iteration.
+
+    \item[Quadratic Convergence] Error reduces to square each iteration (very fast).
+
+    \item[Diagonally Dominant] Matrix where each diagonal element is greater than sum of others in its row.
+
+    \item[Absolute Error] $|\text{approximate value} - \text{previous value}|$
+
+    \item[Relative Error] $|\text{absolute error} / \text{approximate value}|$
+
+    \item[Factorization] Decomposition of matrix into product of simpler matrices.
+
+    \item[Interpolation] Construct function that passes through given points.
+
+    \item[Iteration] One step of the numerical method.
+
+    \item[Positive Definite Matrix] Symmetric matrix with all positive eigenvalues.
+
+    \item[Singular Matrix] Non-invertible matrix (determinant = 0).
+
+    \item[Sparse Matrix] Matrix with many zeros.
+
+    \item[Symmetric Matrix] Matrix where $A_{ij} = A_{ji}$.
+
+    \item[Triangular Matrix] Matrix with zeros above or below diagonal.
+
+    \item[Nmax] Maximum number of iterations allowed.
+
+    \item[Pivot] Diagonal element used in elimination.
+
+    \item[Pivoting] Row/column exchange to improve stability.
+
+    \item[Polynomial] Function of the form $a_0 + a_1x + a_2x^2 + \cdots$
+
+    \item[Spectral Radius] Maximum absolute value of eigenvalues (determines convergence).
+
+    \item[Root] Value $x$ where $f(x) = 0$.
+
+    \item[Multiple Root] Root where $f(x) = f'(x) = 0$.
+
+    \item[Linear System] Set of linear equations $Ax = b$.
+
+    \item[Spline] Piecewise function (different polynomials in each interval).
+
+    \item[Tolerance] Desired precision (stopping criterion).
+\end{description}
+
+\newpage
+%=============================================================================
+\section{References}
+%=============================================================================
+
+\subsection{Recommended Books}
+
+\begin{enumerate}
+    \item \textbf{Burden, R. L., \& Faires, J. D.} (2010). \textit{Numerical Analysis} (9th ed.). Brooks/Cole.
+
+    \item \textbf{Chapra, S. C., \& Canale, R. P.} (2014). \textit{Numerical Methods for Engineers} (7th ed.). McGraw-Hill.
+
+    \item \textbf{Press, W. H., et al.} (2007). \textit{Numerical Recipes: The Art of Scientific Computing} (3rd ed.). Cambridge University Press.
+
+    \item \textbf{Kincaid, D., \& Cheney, W.} (2009). \textit{Numerical Analysis: Mathematics of Scientific Computing} (3rd ed.). American Mathematical Society.
+\end{enumerate}
+
+\subsection{Online Resources}
+
+\begin{itemize}
+    \item \textbf{Desmos Calculator}: \url{https://www.desmos.com/calculator}
+    \item \textbf{SymPy Documentation}: \url{https://docs.sympy.org/}
+    \item \textbf{NumPy Documentation}: \url{https://numpy.org/doc/}
+\end{itemize}
+
+\subsection{Mathematical Concepts}
+
+\textbf{Intermediate Value Theorem:} If $f(a)$ and $f(b)$ have opposite signs, there exists a root in $[a, b]$.
+
+\textbf{Banach Fixed Point Theorem:} If $|g'(x)| < 1$, then $x = g(x)$ converges.
+
+\textbf{Sassenfeld Convergence Criterion:} For iterative methods.
+
+\textbf{Diagonal Dominance Condition:} Sufficient for convergence of Jacobi and Gauss-Seidel.
+
+\newpage
+%=============================================================================
+\section{Appendix: Quick Formulas}
+%=============================================================================
+
+\subsection*{Equation Methods}
+
+\textbf{Bisection:}
+\[x_m = \frac{a + b}{2}\]
+
+\textbf{False Position:}
+\[x_m = \frac{f(b) \cdot a - f(a) \cdot b}{f(b) - f(a)}\]
+
+\textbf{Fixed Point:}
+\[x_{n+1} = g(x_n)\]
+
+\textbf{Newton:}
+\[x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}\]
+
+\textbf{Secant:}
+\[x_{n+1} = x_n - f(x_n) \cdot \frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}\]
+
+\textbf{Newton Multiple Roots:}
+\[x_{n+1} = x_n - \frac{f(x) \cdot f'(x)}{[f'(x)]^2 - f(x) \cdot f''(x)}\]
+
+\subsection*{Iterative Methods}
+
+\textbf{Jacobi:}
+\[x^{(n+1)} = T \cdot x^{(n)} + C\]
+where $T = -D^{-1}(L + U)$ and $C = D^{-1}b$
+
+\textbf{Gauss-Seidel:}
+\[T = -(D - L)^{-1}U, \quad C = (D - L)^{-1}b\]
+
+\textbf{SOR:}
+\[T = (D - \omega L)^{-1}[(1-\omega)D + \omega U], \quad C = \omega(D - \omega L)^{-1}b\]
+
+\newpage
+%=============================================================================
+\section{Frequently Asked Questions (FAQ)}
+%=============================================================================
+
+\textbf{Q: Does the application save my calculations?}\\
+A: No, the application does not save data. Each session is independent.
+
+\vspace{0.5cm}
+
+\textbf{Q: Can I export results?}\\
+A: You can copy and paste the results, or use the browser's print function (Ctrl+P).
+
+\vspace{0.5cm}
+
+\textbf{Q: Does it work offline?}\\
+A: No, it requires connection to load the application and graphics.
+
+\vspace{0.5cm}
+
+\textbf{Q: Is there a calculation limit?}\\
+A: No limit. You can do all the calculations you need.
+
+\vspace{0.5cm}
+
+\textbf{Q: Can I trust the results for professional work?}\\
+A: The methods are correct, but always verify critical results with other tools.
+
+\vspace{0.5cm}
+
+\textbf{Q: Why doesn't my method converge?}\\
+A: Review the ``Troubleshooting'' section and verify that the parameters are adequate.
+
+\vspace{0.5cm}
+
+\textbf{Q: How do I report an error?}\\
+A: Contact the site administrator with details of the problem and parameters used.
+
+\newpage
+%=============================================================================
+\section{Contact and Support}
+%=============================================================================
+
+For questions, suggestions or to report problems:
+
+\begin{itemize}
+    \item \textbf{Email}: scadavidz@eafit.edu.co
+    \item \textbf{Documentation}: This manual
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Date}: November 2025\\
+\textbf{Language}: English
+
+\vspace{2cm}
+
+\begin{center}
+\Large
+\textbf{Thank you for using the Numerical Analysis Calculator!}
+\end{center}
+
+\end{document}
