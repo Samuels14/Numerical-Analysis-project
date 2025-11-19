@@ -1401,6 +1401,10 @@ def index():
                            form_data={},
                            warnings=[])
 
+@app.route('/grapher')
+def grapher():
+    return render_template('grapher.html')
+
 
 @app.route('/calculate', methods=['POST'])
 def calculate():

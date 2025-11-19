@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Function Grapher - Numerical Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+  <style>
+    .grapher-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 120px);
+      min-height: 600px;
+    }
+
+    .grapher-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .back-button:hover {
+      background: rgba(33, 150, 243, 0.08);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+    }
+
+    .graph-container {
+      flex: 1;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: white;
+      min-height: 500px;
+    }
+
+    .controls-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .function-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .function-entry {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .function-entry:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+    }
+
+    .function-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-indicator {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .color-indicator:hover {
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .function-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .function-input:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9fa;
+      border-color: var(--accent);
+    }
+
+    .add-function-btn {
+      justify-self: end;
+    }
+
+    .info-card {
+      background: rgba(33, 150, 243, 0.05);
+      border: 1px solid rgba(33, 150, 243, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .info-card strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .example-tag {
+      padding: 4px 10px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .example-tag:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .grapher-container {
+        height: calc(100vh - 80px);
+        min-height: 400px;
+      }
+
+      .graph-container {
+        min-height: 350px;
+      }
+
+      .controls-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .function-entry {
+        grid-template-columns: 1fr auto;
+        gap: 6px;
+      }
+
+      .function-input-wrapper {
+        grid-column: 1 / -1;
+      }
+
+      .btn {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      .btn-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
+      .grapher-header {
+        margin-bottom: 12px;
+      }
+
+      .add-function-btn {
+        width: 100%;
+      }
+
+      .info-card {
+        font-size: 11px;
+        padding: 10px;
+      }
+
+      .example-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grapher-container {
+        height: calc(100vh - 60px);
+        min-height: 300px;
+      }
+
+      .graph-container {
+        min-height: 280px;
+      }
+
+      .function-input {
+        font-size: 13px;
+      }
+
+      .color-indicator {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="grapher-header">
+      <div>
+        <h1>📊 Function Grapher</h1>
+        <p class="small">Interactive graphing tool with support for multiple functions</p>
+      </div>
+      <a href="/" class="back-button">
+        <span>←</span>
+        <span>Back to Calculator</span>
+      </a>
+    </div>
+
+    <div class="grapher-container">
+      <div class="controls-panel">
+        <div class="function-list" id="functionList">
+          <!-- Function entries will be added dynamically -->
+        </div>
+        <button class="btn btn-primary add-function-btn" onclick="addFunction()">
+          + Add Function
+        </button>
+      </div>
+
+      <div class="graph-container" id="calculator"></div>
+
+      <div class="info-card">
+        <strong>💡 Function Syntax Tips:</strong>
+        <div>Use standard mathematical notation. Supported functions: sin, cos, tan, ln, log, sqrt, exp, abs, and more.</div>
+        <div class="examples">
+          <span class="example-tag" onclick="setExample('sin(x)')">sin(x)</span>
+          <span class="example-tag" onclick="setExample('x^2')">x^2</span>
+          <span class="example-tag" onclick="setExample('e^x')">e^x</span>
+          <span class="example-tag" onclick="setExample('\\ln(x)')">ln(x)</span>
+          <span class="example-tag" onclick="setExample('\\sqrt{x}')">√x</span>
+          <span class="example-tag" onclick="setExample('\\frac{1}{x}')">1/x</span>
+          <span class="example-tag" onclick="setExample('x^3-2x+1')">x³-2x+1</span>
+          <span class="example-tag" onclick="setExample('\\sin(x)/x')">sin(x)/x</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let calculator = null;
+    let functionCount = 0;
+    const colors = [
+      '#2563eb', '#16a34a', '#dc2626', '#9333ea', '#ea580c',
+      '#0891b2', '#ca8a04', '#e11d48', '#7c3aed', '#059669'
+    ];
+
+    // Initialize Desmos calculator
+    function initCalculator() {
+      const element = document.getElementById('calculator');
+      calculator = Desmos.GraphingCalculator(element, {
+        keypad: true,
+        expressions: true,
+        settingsMenu: true,
+        zoomButtons: true,
+        expressionsTopbar: true,
+        border: false,
+        lockViewport: false
+      });
+
+      // Add coordinate axes
+      calculator.setExpression({
+        id: 'x-axis',
+        latex: 'y=0',
+        color: '#9ca3af',
+        lineStyle: Desmos.Styles.DASHED,
+        lineWidth: 1,
+        secret: true
+      });
+
+      calculator.setExpression({
+        id: 'y-axis',
+        latex: 'x=0',
+        color: '#9ca3af',
+        lineStyle: Desmos.Styles.DASHED,
+        lineWidth: 1,
+        secret: true
+      });
+
+      // Set default viewport
+      calculator.setMathBounds({
+        left: -10,
+        right: 10,
+        bottom: -10,
+        top: 10
+      });
+    }
+
+    // Add a new function entry
+    function addFunction() {
+      functionCount++;
+      const color = colors[functionCount % colors.length];
+      
+      const entry = document.createElement('div');
+      entry.className = 'function-entry';
+      entry.id = `function-${functionCount}`;
+      entry.dataset.functionId = functionCount;
+      
+      entry.innerHTML = `
+        <div class="function-input-wrapper">
+          <div class="color-indicator" style="background-color: ${color};" 
+               onclick="cycleColor(${functionCount})"></div>
+          <input type="text" 
+                 class="function-input" 
+                 id="input-${functionCount}"
+                 placeholder="e.g., x^2, sin(x), e^x"
+                 oninput="updateFunction(${functionCount})"
+                 onkeypress="if(event.key==='Enter') updateFunction(${functionCount})">
+        </div>
+        <button class="btn btn-secondary btn-icon" onclick="toggleFunction(${functionCount})" 
+                id="toggle-${functionCount}" title="Show/Hide">
+          👁️
+        </button>
+        <button class="btn btn-danger btn-icon" onclick="removeFunction(${functionCount})" 
+                title="Remove">
+          🗑️
+        </button>
+      `;
+      
+      document.getElementById('functionList').appendChild(entry);
+      document.getElementById(`input-${functionCount}`).focus();
+    }
+
+    // Update function in graph
+    function updateFunction(id) {
+      const input = document.getElementById(`input-${id}`);
+      const entry = document.getElementById(`function-${id}`);
+      const colorIndicator = entry.querySelector('.color-indicator');
+      const color = colorIndicator.style.backgroundColor;
+      
+      const latex = input.value.trim();
+      
+      if (latex) {
+        calculator.setExpression({
+          id: `func-${id}`,
+          latex: `y=${latex}`,
+          color: color,
+          lineWidth: 2.5
+        });
+      } else {
+        calculator.removeExpression({ id: `func-${id}` });
+      }
+    }
+
+    // Toggle function visibility
+    function toggleFunction(id) {
+      const button = document.getElementById(`toggle-${id}`);
+      const expr = calculator.getExpressions().find(e => e.id === `func-${id}`);
+      
+      if (expr) {
+        const isHidden = expr.hidden;
+        calculator.setExpression({
+          id: `func-${id}`,
+          hidden: !isHidden
+        });
+        button.textContent = isHidden ? '👁️' : '🙈';
+        button.title = isHidden ? 'Hide' : 'Show';
+      }
+    }
+
+    // Remove function
+    function removeFunction(id) {
+      calculator.removeExpression({ id: `func-${id}` });
+      document.getElementById(`function-${id}`).remove();
+    }
+
+    // Cycle through colors
+    function cycleColor(id) {
+      const entry = document.getElementById(`function-${id}`);
+      const colorIndicator = entry.querySelector('.color-indicator');
+      const currentColor = colorIndicator.style.backgroundColor;
+      const currentIndex = colors.findIndex(c => {
+        const temp = document.createElement('div');
+        temp.style.color = c;
+        return temp.style.color === currentColor;
+      });
+      
+      const nextIndex = (currentIndex + 1) % colors.length;
+      const nextColor = colors[nextIndex];
+      colorIndicator.style.backgroundColor = nextColor;
+      
+      // Update the expression color
+      updateFunction(id);
+    }
+
+    // Set example function
+    function setExample(latex) {
+      // Find first empty input or add new function
+      const inputs = document.querySelectorAll('.function-input');
+      let targetInput = null;
+      
+      for (let input of inputs) {
+        if (!input.value.trim()) {
+          targetInput = input;
+          break;
+        }
+      }
+      
+      if (!targetInput) {
+        addFunction();
+        setTimeout(() => {
+          const newInputs = document.querySelectorAll('.function-input');
+          targetInput = newInputs[newInputs.length - 1];
+          if (targetInput) {
+            targetInput.value = latex;
+            const id = targetInput.id.split('-')[1];
+            updateFunction(id);
+          }
+        }, 100);
+      } else {
+        targetInput.value = latex;
+        const id = targetInput.id.split('-')[1];
+        updateFunction(id);
+        targetInput.focus();
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initCalculator();
+      // Add first function entry
+      addFunction();
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      if (calculator) {
+        calculator.resize();
+      }
+    });
+  </script>
+</body>
+</html>
